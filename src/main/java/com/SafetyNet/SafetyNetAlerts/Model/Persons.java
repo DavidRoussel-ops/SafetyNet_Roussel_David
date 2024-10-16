@@ -1,6 +1,6 @@
 package com.SafetyNet.SafetyNetAlerts.Model;
 
-public class persons {
+public class Persons {
 
     private String firstName;
 
