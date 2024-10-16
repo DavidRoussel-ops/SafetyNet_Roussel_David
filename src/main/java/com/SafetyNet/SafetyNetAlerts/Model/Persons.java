@@ -76,4 +76,9 @@ public class Persons {
     public String toString() {
         return super.toString();
     }
+
+    String hello = "Salut je suis une personnes.";
+    public String ditBonjour() {
+        return hello;
+    }
 }
