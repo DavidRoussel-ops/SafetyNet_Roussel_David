@@ -2,7 +2,7 @@ package com.SafetyNet.SafetyNetAlerts.Model;
 
 import java.util.Date;
 
-public class medicalrecords {
+public class MedicalRecords {
 
     private String firstname;
 
