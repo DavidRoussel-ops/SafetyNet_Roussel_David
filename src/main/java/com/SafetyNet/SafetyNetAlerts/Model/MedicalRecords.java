@@ -54,7 +54,13 @@ public class MedicalRecords {
         this.allergies = allergies;
     }
 
+    @Override
     public String toString() {
         return super.toString();
+    }
+
+    String medical = "Nous sommes le registre medical";
+    public String leRegistre() {
+        return medical;
     }
 }
