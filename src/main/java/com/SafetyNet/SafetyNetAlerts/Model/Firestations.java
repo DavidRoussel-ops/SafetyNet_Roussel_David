@@ -26,4 +26,9 @@ public class Firestations {
     public String toString() {
         return super.toString();
     }
+
+    String pompier = "Nous sommes la caserne des pompier";
+    public String lesPompier() {
+        return pompier;
+    }
 }
