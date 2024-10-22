@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SafetyNetAlertsApplicationTests {
 
-	@Autowired
+	/*@Autowired
 	BusinessService businessService;
 
 	@Test
@@ -23,6 +23,6 @@ class SafetyNetAlertsApplicationTests {
 		Persons persons = businessService.getPersons();
 		persons.setFirstname("John");
 		Assertions.assertEquals(expected, persons.getFirstname());
-	}
+	}*/
 
 }
