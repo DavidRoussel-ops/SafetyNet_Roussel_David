@@ -1,29 +1,21 @@
 package com.SafetyNet.SafetyNetAlerts.Model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name = "firestations")
 public class Firestations {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "station")
     private int station;
 
-    public int getStation() {
-        return station;
-    }
-
-    public void setStation(int station) {
-        this.station = station;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
