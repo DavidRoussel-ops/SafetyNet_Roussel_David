@@ -1,61 +1,32 @@
 package com.SafetyNet.SafetyNetAlerts.Model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
+@Entity
+@Table(name = "medical_records")
 public class MedicalRecords {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "first_name")
     private String firstname;
 
+    @Column(name = "last_name")
     private String lastname;
 
+    @Column(name = "birthdate")
     private Date birthdate;
 
+    @Column(name = "medications")
     private String[] medications;
 
+    @Column(name = "allergies")
     private String[] allergies;
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public Date getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(Date birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public String[] getMedications() {
-        return medications;
-    }
-
-    public void setMedications(String[] medications) {
-        this.medications = medications;
-    }
-
-    public String[] getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(String[] allergies) {
-        this.allergies = allergies;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }
