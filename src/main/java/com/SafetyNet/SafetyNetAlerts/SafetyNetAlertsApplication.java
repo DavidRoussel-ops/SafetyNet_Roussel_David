@@ -1,20 +1,14 @@
 package com.SafetyNet.SafetyNetAlerts;
 
-import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
-import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import java.io.*;
 
 @SpringBootApplication
 public class SafetyNetAlertsApplication implements CommandLineRunner {
@@ -22,7 +16,20 @@ public class SafetyNetAlertsApplication implements CommandLineRunner {
 	@Autowired
 	BusinessService businessService;
 
-	public static void main(String[] args) {
+    {
+        try {
+			ObjectMapper mapper = new ObjectMapper();
+			File file = new File("src/main/resources/data.json");
+			JsonNode jsonNode = mapper.readTree(file);
+			JsonNode locatedNode = jsonNode.path("persons");
+			System.out.println("jsonNode : " + jsonNode);
+			System.out.println("persons : " + locatedNode);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
 		SpringApplication.run(SafetyNetAlertsApplication.class, args);
 	}
 
