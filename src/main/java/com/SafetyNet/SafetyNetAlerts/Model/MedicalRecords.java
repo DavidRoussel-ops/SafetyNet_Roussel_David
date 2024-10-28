@@ -21,12 +21,12 @@ public class MedicalRecords {
     private String lastname;
 
     @Column(name = "birthdate")
-    private Date birthdate;
+    private String birthdate;
 
     @Column(name = "medications")
-    private String[] medications;
+    private String medications;
 
     @Column(name = "allergies")
-    private String[] allergies;
+    private String allergies;
 
 }
