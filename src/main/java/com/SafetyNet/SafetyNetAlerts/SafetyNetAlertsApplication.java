@@ -68,8 +68,8 @@ public class SafetyNetAlertsApplication implements CommandLineRunner {
 					medicalRecords.setFirstname(node.path("firstName").asText());
 					medicalRecords.setLastname(node.path("lastName").asText());
 					medicalRecords.setBirthdate(node.path("birthdate").asText());
-					medicalRecords.setMedications(node.path("medications").asText());
-					medicalRecords.setAllergies(node.path("allergies").asText());
+					medicalRecords.setMedications(String.valueOf(node.findValue("medications")));
+					medicalRecords.setAllergies(String.valueOf(node.findValue("allergies")));
 					medicalRecordsService.saveMedicalRecord(medicalRecords);
 				}
 			} catch (IOException e) {
