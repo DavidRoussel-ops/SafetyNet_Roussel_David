@@ -16,6 +16,6 @@ public class Firestations {
     private String address;
 
     @Column(name = "station")
-    private int station;
+    private String station;
 
 }
