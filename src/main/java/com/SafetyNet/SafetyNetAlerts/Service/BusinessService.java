@@ -45,7 +45,7 @@ public class BusinessService {
             for (JsonNode node : FirestationsNode) {
                 Firestations firestations = new Firestations();
                 firestations.setAddress(node.path("address").asText());
-                firestations.setStation(node.path("station").asInt());
+                firestations.setStation(node.path("station").asText());
                 firestationsService.saveFirestation(firestations);
             }
             for (JsonNode node : MedicalRecordsNode) {
