@@ -1,7 +1,7 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,21 +46,31 @@ public class PersonsControllerTest {
 
     @Test
     public void testAddOnePerson() throws Exception {
-        Persons persons = new Persons();
-        persons.setFirstname("Nigel");
-        persons.setLastname("Miguel");
-        persons.setAddress("26 rue des rosiers");
-        persons.setZip("123456789");
-        persons.setCity("Orlando");
-        persons.setEmail("nigelisthebest@gmail.com");
-        persons.setPhone("1234-555-6789");
-        persons.setId(24L);
-        service.savePerson(persons);
-        mockMvc.perform(get("/person/24"))
+        String personToPost = "{ \"firstname\":\"Paul\", \"lastname\":\"Boyd\", \"address\":\"1509 Culver St\", \"city\":\"Culver\", \"zip\":\"97451\", \"phone\":\"841-874-6512\", \"email\":\"jaboyd@email.com\" }";
+        mockMvc.perform(post("/person")
+                        .content(personToPost)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("firstname", is("Nigel")));
+                .andExpect(jsonPath("firstname", is("Paul")));
     }
 
+    @Test
+    public void testPutOnePerson() throws Exception {
+        String personToPut = "{ \"firstname\":\"Paul\", \"lastname\":\"Boyd\", \"address\":\"1509 Culver St\", \"city\":\"Culver\", \"zip\":\"97451\", \"phone\":\"841-874-6512\", \"email\":\"jaboyd@email.com\" }";
+        mockMvc.perform(put("/person/{id}", 1)
+                        .content(personToPut)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("firstname", is("Paul")));
+    }
+
+    @Test
+    public void testDeleteOnePerson() throws Exception {
+        mockMvc.perform(delete("/person/{id}", 1))
+                .andExpect(status().isOk());
+    }
 
 }
 
