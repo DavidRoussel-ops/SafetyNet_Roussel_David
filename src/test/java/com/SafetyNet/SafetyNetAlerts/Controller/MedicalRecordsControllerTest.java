@@ -1,7 +1,7 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -31,25 +32,38 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
-    public void testGetOnePerson() throws Exception {
+    public void testGetOneMedicalRecords() throws Exception {
         mockMvc.perform(get("/medicalRecord/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("firstname", is("John")));
     }
 
     @Test
-    public void testAddOnePerson() throws Exception {
-        MedicalRecords medicalRecords = new MedicalRecords();
-        medicalRecords.setFirstname("Nigel");
-        medicalRecords.setLastname("Miguel");
-        medicalRecords.setBirthdate("05/06/1953");
-        medicalRecords.setMedications("aznol:350mg");
-        medicalRecords.setAllergies("nillacilan");
-        medicalRecords.setId(24L);
-        service.saveMedicalRecord(medicalRecords);
-        mockMvc.perform(get("/medicalRecord/24"))
+    public void testAddOneMedicalRecords() throws Exception {
+        String medicalRecordToPost = "{ \"firstName\":\"John\", \"lastName\":\"Boyd\", \"birthdate\":\"03/06/1984\", \"medications\":[\"aznol:350mg\", \"hydrapermazol:100mg\"], \"allergies\":[\"nillacilan\"] }";
+        mockMvc.perform(get("/medicalRecord")
+                        .content(medicalRecordToPost)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("birthdate", is("05/06/1953")));
+                .andExpect(jsonPath("$[0].birthdate", is("03/06/1984")));
+    }
+
+    @Test
+    public void testPutOneMedicalRecords() throws Exception {
+        String medicalRecordToPut = "{ \"firstName\":\"Pierre\", \"lastName\":\"Boyd\", \"birthdate\":\"03/06/1984\", \"medications\":[\"aznol:350mg\", \"hydrapermazol:100mg\"], \"allergies\":[\"nillacilan\"] }";
+        mockMvc.perform(put("/medicalRecord/{id}", 1)
+                        .content(medicalRecordToPut)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("firstname", is("Pierre")));
+    }
+
+    @Test
+    public void testDeleteOneMedicalRecords() throws Exception {
+        mockMvc.perform(delete("/medicalRecord/{id}", 1))
+                .andExpect(status().isOk());
     }
 
 }
