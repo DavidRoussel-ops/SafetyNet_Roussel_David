@@ -3,6 +3,8 @@ package com.SafetyNet.SafetyNetAlerts.Controller;
 import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
 import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -19,8 +21,13 @@ public class FirestationsController {
      * @return the firestation object saved
      */
     @PostMapping("/firestation")
-    public Firestations createFirestations(@RequestBody Firestations firestations) {
-        return firestationsService.saveFirestation(firestations);
+    public ResponseEntity<Firestations> createFirestations(@RequestBody Firestations firestations) {
+        Firestations firestations1 = firestationsService.saveFirestation(firestations);
+        try {
+            return new ResponseEntity<>(firestations1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -29,9 +36,9 @@ public class FirestationsController {
      * @return an firestation object
      */
     @GetMapping("/firestation/{id}")
-    public Firestations getFirestation(@PathVariable("id") final Long id) {
+    public ResponseEntity<Firestations> getFirestation(@PathVariable("id") final Long id) {
         Optional<Firestations> firestation = firestationsService.getFirestation(id);
-        return firestation.orElse(null);
+        return firestation.map(station -> new ResponseEntity<>(station, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -39,8 +46,13 @@ public class FirestationsController {
      * @return - An iterable object of Firestations
      */
     @GetMapping("/firestation")
-    public Iterable<Firestations> getFirestations() {
-        return firestationsService.getFirestations();
+    public ResponseEntity<Iterable<Firestations>> getAllFirestations() {
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        try {
+            return new ResponseEntity<>(firestations, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -50,7 +62,7 @@ public class FirestationsController {
      * @return
      */
     @PutMapping("/firestation/{id}")
-    public Firestations updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) {
+    public ResponseEntity<Firestations> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) {
         Optional<Firestations> firestationsOptional = firestationsService.getFirestation(id);
         if (firestationsOptional.isPresent()) {
             Firestations currentFirestation = firestationsOptional.get();
@@ -64,10 +76,9 @@ public class FirestationsController {
             if (station != null) {
                 currentFirestation.setStation(station);
             }
-            firestationsService.saveFirestation(currentFirestation);
-            return currentFirestation;
+            return new ResponseEntity<>(firestationsService.saveFirestation(currentFirestation), HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -76,7 +87,12 @@ public class FirestationsController {
      * @param id - the id of the firestation to delete
      */
     @DeleteMapping("/firestation/{id}")
-    public void deleteFirestation(@PathVariable("id") final Long id) {
-        firestationsService.deleteFirestation(id);
+    public ResponseEntity<HttpStatus> deleteFirestation(@PathVariable("id") final Long id) {
+        try {
+            firestationsService.deleteFirestation(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
