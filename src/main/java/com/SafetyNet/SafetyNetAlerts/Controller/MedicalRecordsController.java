@@ -2,8 +2,9 @@ package com.SafetyNet.SafetyNetAlerts.Controller;
 
 import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
 import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
-import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,8 +21,13 @@ public class MedicalRecordsController {
      * @return the medicalRecords object saved
      */
     @PostMapping("/medicalRecord")
-    public MedicalRecords createMedicalRecord(@RequestBody MedicalRecords medicalRecords) {
-        return medicalRecordsService.saveMedicalRecord(medicalRecords);
+    public ResponseEntity<MedicalRecords> createMedicalRecord(@RequestBody MedicalRecords medicalRecords) {
+        MedicalRecords medicalRecords1 =  medicalRecordsService.saveMedicalRecord(medicalRecords);
+        try {
+            return new ResponseEntity<>(medicalRecords1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -30,9 +36,9 @@ public class MedicalRecordsController {
      * @return an medicalRecords object
      */
     @GetMapping("/medicalRecord/{id}")
-    public MedicalRecords getMedicalRecord(@PathVariable("id") final Long id) {
+    public ResponseEntity<MedicalRecords> getMedicalRecord(@PathVariable("id") final Long id) {
         Optional<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecord(id);
-        return medicalRecords.orElse(null);
+        return medicalRecords.map(records -> new ResponseEntity<>(records, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -40,18 +46,23 @@ public class MedicalRecordsController {
      * @return - An iterable object of firestation
      */
     @GetMapping("/medicalRecord")
-    public Iterable<MedicalRecords> getMedicalRecords() {
-        return medicalRecordsService.getMedicalRecords();
+    public ResponseEntity<Iterable<MedicalRecords>> getAllMedicalRecords() {
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        try {
+            return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Update - Update an existing medicalRecords
      * @param id - the id of the medicalRecord to update
      * @param medicalRecord - the medicalRecord object updated
-     * @return
+     * @return currentMedicalRecords
      */
     @PutMapping("/medicalRecord/{id}")
-    public MedicalRecords updateMedicalRecord(@PathVariable("id") final Long id, @RequestBody MedicalRecords medicalRecord) {
+    public ResponseEntity<MedicalRecords> updateMedicalRecord(@PathVariable("id") final Long id, @RequestBody MedicalRecords medicalRecord) {
         Optional<MedicalRecords> medicalRecordsOptional = medicalRecordsService.getMedicalRecord(id);
         if (medicalRecordsOptional.isPresent()) {
             MedicalRecords currentMedicalRecords = medicalRecordsOptional.get();
@@ -77,10 +88,9 @@ public class MedicalRecordsController {
             if (allergies != null) {
                 currentMedicalRecords.setAllergies(allergies);
             }
-            medicalRecordsService.saveMedicalRecord(currentMedicalRecords);
-            return currentMedicalRecords;
+            return new ResponseEntity<>(medicalRecordsService.saveMedicalRecord(currentMedicalRecords), HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -89,7 +99,12 @@ public class MedicalRecordsController {
      * @param id - the id of the medicalRecords to delete
      */
     @DeleteMapping("/medicalRecord/{id}")
-    public void deleteMedicalRecord(@PathVariable("id") final Long id) {
-        medicalRecordsService.deleteMedicalRecord(id);
+    public ResponseEntity<HttpStatus> deleteMedicalRecord(@PathVariable("id") final Long id) {
+        try {
+            medicalRecordsService.deleteMedicalRecord(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
