@@ -3,6 +3,8 @@ package com.SafetyNet.SafetyNetAlerts.Controller;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -19,8 +21,13 @@ public class PersonsController {
      * @return the persons object saved
      */
     @PostMapping("/person")
-    public Persons createPersons(@RequestBody Persons persons) {
-        return personService.savePerson(persons);
+    public ResponseEntity<Persons> createPersons(@RequestBody Persons persons) {
+        Persons persons1 = personService.savePerson(persons);
+        try {
+            return new ResponseEntity<>(persons1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -29,9 +36,9 @@ public class PersonsController {
      * @return an persons object
      */
     @GetMapping("/person/{id}")
-    public Persons getPerson(@PathVariable("id") final Long id) {
+    public ResponseEntity<Persons> getPerson(@PathVariable("id") final Long id) {
         Optional<Persons> persons = personService.getPerson(id);
-        return persons.orElse(null);
+        return persons.map(person -> new ResponseEntity<>(person, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -39,8 +46,13 @@ public class PersonsController {
      * @return - An Iterable object of Employee
      */
     @GetMapping("/person")
-    public Iterable<Persons> getPersons() {
-        return personService.getPersons();
+    public ResponseEntity<Iterable<Persons>> getAllPersons() {
+        Iterable<Persons> persons = personService.getPersons();
+        try {
+            return new ResponseEntity<>(persons, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -50,7 +62,7 @@ public class PersonsController {
      * @return
      */
     @PutMapping("/person/{id}")
-    public Persons updatePerson(@PathVariable("id") final Long id, @RequestBody Persons persons) {
+    public ResponseEntity<Persons> updatePerson(@PathVariable("id") final Long id, @RequestBody Persons persons) {
         Optional<Persons> personsOptional = personService.getPerson(id);
         if (personsOptional.isPresent()) {
             Persons currentPersons = personsOptional.get();
@@ -83,10 +95,9 @@ public class PersonsController {
             if (email != null) {
                 currentPersons.setEmail(email);
             }
-            personService.savePerson(currentPersons);
-            return currentPersons;
+            return new ResponseEntity<>(personService.savePerson(currentPersons), HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -95,7 +106,12 @@ public class PersonsController {
      * @param id - The id of the person to delete
      */
     @DeleteMapping("/person/{id}")
-    public void deletePerson(@PathVariable("id") final Long id) {
-        personService.deletePerson(id);
+    public ResponseEntity<HttpStatus> deletePerson(@PathVariable("id") final Long id) {
+        try {
+            personService.deletePerson(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
