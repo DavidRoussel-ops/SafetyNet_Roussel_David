@@ -1,12 +1,16 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
+import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -14,6 +18,9 @@ public class PersonsController {
 
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    private BusinessService businessService;
 
     /**
      * Create - Add a new person
@@ -43,13 +50,55 @@ public class PersonsController {
 
     /**
      * Read - Get all person
-     * @return - An Iterable object of Employee
+     * @return - An Iterable object of person
      */
     @GetMapping("/person")
     public ResponseEntity<Iterable<Persons>> getAllPersons() {
         Iterable<Persons> persons = personService.getPersons();
         try {
             return new ResponseEntity<>(persons, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Read - Get all person
+     * @return - An ArrayList object of mail
+     */
+    @GetMapping("/communityEmail")
+    @ResponseBody
+    public ResponseEntity<ArrayList<String>> getAllMail(@RequestParam(defaultValue = "city") String city) {
+        Iterable<Persons> persons = personService.getPersons();
+        ArrayList<String> mail = new ArrayList<>();
+        try {
+            for (Persons person : persons) {
+                if (Objects.equals(city, person.getCity())) {
+                    mail.add(person.getEmail());
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(mail, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/")
+    @ResponseBody
+    public ResponseEntity<ArrayList<String>> getPersonsByLastname(@RequestParam(defaultValue = "personInfolastName") String lastname) {
+        Iterable<Persons> persons = personService.getPersons();
+        ArrayList<String> infoPerson = new ArrayList<>();
+        try {
+            for (Persons person : persons) {
+                if (Objects.equals(lastname, person.getLastname())) {
+                    infoPerson.add(person.getLastname());
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(infoPerson, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
