@@ -1,7 +1,11 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
+import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
+import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
+import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
+import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,12 @@ public class PersonsController {
 
     @Autowired
     private BusinessService businessService;
+
+    @Autowired
+    private FirestationsService firestationsService;
+
+    @Autowired
+    private MedicalRecordsService medicalRecordsService;
 
     /**
      * Create - Add a new person
@@ -85,15 +95,28 @@ public class PersonsController {
         }
     }
 
-    @GetMapping("/")
+
+    @GetMapping("/personInfolastName={lastName}")
     @ResponseBody
-    public ResponseEntity<ArrayList<String>> getPersonsByLastname(@RequestParam(defaultValue = "personInfolastName") String lastname) {
+    public ResponseEntity<ArrayList<String>> getPersonsByLastname(@PathVariable("lastName") String lastname) {
         Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         ArrayList<String> infoPerson = new ArrayList<>();
         try {
             for (Persons person : persons) {
                 if (Objects.equals(lastname, person.getLastname())) {
                     infoPerson.add(person.getLastname());
+                    infoPerson.add(person.getAddress());
+                    infoPerson.add(person.getEmail());
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+            }
+            for (MedicalRecords medicalRecord : medicalRecords) {
+                if (Objects.equals(lastname, medicalRecord.getLastname())) {
+                    infoPerson.add(medicalRecord.getBirthdate());
+                    infoPerson.add(medicalRecord.getMedications());
+                    infoPerson.add(medicalRecord.getAllergies());
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
