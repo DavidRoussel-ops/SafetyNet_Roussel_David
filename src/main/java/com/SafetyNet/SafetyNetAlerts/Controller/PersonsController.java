@@ -1,21 +1,24 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
+
 import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
 import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
+import com.SafetyNet.SafetyNetAlerts.ModelDTO.*;
 import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
 import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
 import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Consumer;
 
 @RestController
 public class PersonsController {
@@ -73,18 +76,20 @@ public class PersonsController {
     }
 
     /**
-     * Read - Get all person
+     * Read - Get  person
      * @return - An ArrayList object of mail
      */
     @GetMapping("/communityEmail")
     @ResponseBody
-    public ResponseEntity<ArrayList<String>> getAllMail(@RequestParam(defaultValue = "city") String city) {
+    public ResponseEntity<ArrayList<EmailDTO>> getAllMail(@RequestParam(defaultValue = "city") String city) {
         Iterable<Persons> persons = personService.getPersons();
-        ArrayList<String> mail = new ArrayList<>();
+        ArrayList<EmailDTO> mail = new ArrayList<>();
         try {
             for (Persons person : persons) {
                 if (Objects.equals(city, person.getCity())) {
-                    mail.add(person.getEmail());
+                    EmailDTO emailDTO = new EmailDTO();
+                    emailDTO.setEmail(person.getEmail());
+                    mail.add(emailDTO);
                 } else {
                     return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
                 }
@@ -95,36 +100,40 @@ public class PersonsController {
         }
     }
 
-
     @GetMapping("/personInfolastName={lastName}")
     @ResponseBody
-    public ResponseEntity<ArrayList<String>> getPersonsByLastname(@PathVariable("lastName") String lastname) {
+    public ResponseEntity<ArrayList<InfolastNameDTO>> getPersonsByLastname(@PathVariable("lastName") String lastname) throws ParseException {
         Iterable<Persons> persons = personService.getPersons();
+        Iterator<Persons> iterator = persons.iterator();
         Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        ArrayList<String> infoPerson = new ArrayList<>();
+        Iterator<MedicalRecords> iterator1 = medicalRecords.iterator();
+        ArrayList<InfolastNameDTO> infoPerson = new ArrayList<>();
         try {
-            for (Persons person : persons) {
-                if (Objects.equals(lastname, person.getLastname())) {
-                    infoPerson.add(person.getLastname());
-                    infoPerson.add(person.getAddress());
-                    infoPerson.add(person.getEmail());
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            while (iterator.hasNext()) {
+                Persons persons1 = iterator.next();
+                if (Objects.equals(lastname, persons1.getLastname())) {
+                    InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
+                    infolastNameDTO.setLastname(persons1.getLastname());
+                    infolastNameDTO.setEmail(persons1.getEmail());
+                    infolastNameDTO.setAddress(persons1.getAddress());
+                    if (iterator1.hasNext()) {
+                        MedicalRecords medicalRecords1 = iterator1.next();
+                        if (Objects.equals(lastname, medicalRecords1.getLastname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            infolastNameDTO.setBirthdate(getYears(birthdate));
+                            infolastNameDTO.setMedications(medicalRecords1.getMedications());
+                            infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+                        }
+                    }
+                    infoPerson.add(infolastNameDTO);
                 }
             }
-            for (MedicalRecords medicalRecord : medicalRecords) {
-                if (Objects.equals(lastname, medicalRecord.getLastname())) {
-                    infoPerson.add(medicalRecord.getBirthdate());
-                    infoPerson.add(medicalRecord.getMedications());
-                    infoPerson.add(medicalRecord.getAllergies());
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(infoPerson, HttpStatus.OK);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(infoPerson, HttpStatus.OK);
     }
 
     /**
@@ -185,5 +194,19 @@ public class PersonsController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public static int getYears(Date date)
+    {
+        Calendar current = Calendar.getInstance();
+        Calendar birthdate = Calendar.getInstance();
+        birthdate.setTime(date);
+        int yeardiff = current.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR);
+        current.add(Calendar.YEAR,-yeardiff);
+        if(birthdate.after(current))
+        {
+            yeardiff = yeardiff - 1;
+        }
+        return yeardiff;
     }
 }
