@@ -162,7 +162,7 @@ public class PersonsController {
                             if (Objects.equals(lastname, medicalRecords1.getLastname())) {
                                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                                 Date birthdate = format.parse(medicalRecords1.getBirthdate());
-                                infolastNameDTO.setBirthdate(getYears(birthdate));
+                                infolastNameDTO.setAge(getYears(birthdate));
                                 infolastNameDTO.setMedications(medicalRecords1.getMedications());
                                 infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
                             }
