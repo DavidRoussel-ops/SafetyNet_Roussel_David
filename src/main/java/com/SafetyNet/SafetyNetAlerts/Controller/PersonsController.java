@@ -77,7 +77,7 @@ public class PersonsController {
 
     /**
      * Read - Get  person
-     * @return - An ArrayList object of mail
+     * @return - An ArrayList object of EmailDTO
      */
     @GetMapping("/communityEmail")
     @ResponseBody
@@ -100,6 +100,46 @@ public class PersonsController {
         }
     }
 
+    @GetMapping("/flood/stations")
+    @ResponseBody
+    public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam(defaultValue = "stations") String stationNumber) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterator<Persons> personsIterator = persons.iterator();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        Iterator<MedicalRecords> medicalRecordsIterator = medicalRecords.iterator();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        Iterator<Firestations> firestationsIterator = firestations.iterator();
+        ArrayList<ListStationDTO> listStationDTOS = new ArrayList<>();
+        try {
+            if (Objects.equals(stationNumber, firestationsIterator.next().getStation())) {
+                while (personsIterator.hasNext()) {
+                    Persons persons1 = personsIterator.next();
+                    Firestations firestations1 = firestationsIterator.next();
+                    MedicalRecords medicalRecords1 = medicalRecordsIterator.next();
+                    if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                        Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                        ListStationDTO listStationDTO = new ListStationDTO();
+                        listStationDTO.setLastname(persons1.getLastname());
+                        listStationDTO.setPhone(persons1.getPhone());
+                        listStationDTO.setAge(getYears(birthdate));
+                        listStationDTO.setMedications(medicalRecords1.getMedications());
+                        listStationDTO.setAllergies(medicalRecords1.getAllergies());
+                        listStationDTOS.add(listStationDTO);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(listStationDTOS, HttpStatus.OK);
+    }
+
+    /**
+     * Read - Get  person, medicalRecord
+     * @param lastname - The lastname of person to search
+     * @return - An ArrayList object of InfolastNameDTO
+     */
     @GetMapping("/personInfolastName={lastName}")
     @ResponseBody
     public ResponseEntity<ArrayList<InfolastNameDTO>> getPersonsByLastname(@PathVariable("lastName") String lastname) throws ParseException {
