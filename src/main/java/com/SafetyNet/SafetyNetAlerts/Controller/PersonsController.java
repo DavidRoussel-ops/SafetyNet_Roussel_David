@@ -109,25 +109,29 @@ public class PersonsController {
         Iterator<MedicalRecords> iterator1 = medicalRecords.iterator();
         ArrayList<InfolastNameDTO> infoPerson = new ArrayList<>();
         try {
-            while (iterator.hasNext()) {
-                Persons persons1 = iterator.next();
-                if (Objects.equals(lastname, persons1.getLastname())) {
-                    InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
-                    infolastNameDTO.setLastname(persons1.getLastname());
-                    infolastNameDTO.setEmail(persons1.getEmail());
-                    infolastNameDTO.setAddress(persons1.getAddress());
-                    if (iterator1.hasNext()) {
-                        MedicalRecords medicalRecords1 = iterator1.next();
-                        if (Objects.equals(lastname, medicalRecords1.getLastname())) {
-                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
-                            infolastNameDTO.setBirthdate(getYears(birthdate));
-                            infolastNameDTO.setMedications(medicalRecords1.getMedications());
-                            infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+            if (Objects.equals(lastname, iterator.next().getLastname())) {
+                while (iterator.hasNext()) {
+                    Persons persons1 = iterator.next();
+                    if (Objects.equals(lastname, persons1.getLastname())) {
+                        InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
+                        infolastNameDTO.setLastname(persons1.getLastname());
+                        infolastNameDTO.setEmail(persons1.getEmail());
+                        infolastNameDTO.setAddress(persons1.getAddress());
+                        if (iterator1.hasNext()) {
+                            MedicalRecords medicalRecords1 = iterator1.next();
+                            if (Objects.equals(lastname, medicalRecords1.getLastname())) {
+                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                                infolastNameDTO.setBirthdate(getYears(birthdate));
+                                infolastNameDTO.setMedications(medicalRecords1.getMedications());
+                                infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+                            }
                         }
+                        infoPerson.add(infolastNameDTO);
                     }
-                    infoPerson.add(infolastNameDTO);
                 }
+            } else {
+                iterator.next();
             }
         }
         catch (Exception e) {
