@@ -10,7 +10,7 @@ public class InfolastNameDTO {
 
     private String address;
 
-    private int birthdate;
+    private int age;
 
     private String email;
 
