@@ -37,6 +37,7 @@ public class PersonsController {
 
     /**
      * Create - Add a new person
+     *
      * @param persons an Object Persons
      * @return the persons object saved
      */
@@ -52,6 +53,7 @@ public class PersonsController {
 
     /**
      * Read - Get one persons
+     *
      * @param id the id of the persons
      * @return an persons object
      */
@@ -63,6 +65,7 @@ public class PersonsController {
 
     /**
      * Read - Get all person
+     *
      * @return - An Iterable object of person
      */
     @GetMapping("/person")
@@ -77,6 +80,7 @@ public class PersonsController {
 
     /**
      * Read - Get  person
+     *
      * @return - An ArrayList object of EmailDTO
      */
     @GetMapping("/communityEmail")
@@ -102,31 +106,37 @@ public class PersonsController {
 
     @GetMapping("/flood/stations")
     @ResponseBody
-    public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam(defaultValue = "stations") String stationNumber) throws ParseException {
+    public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam String stations) throws ParseException {
         Iterable<Persons> persons = personService.getPersons();
         Iterator<Persons> personsIterator = persons.iterator();
         Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        Iterator<MedicalRecords> medicalRecordsIterator = medicalRecords.iterator();
         Iterable<Firestations> firestations = firestationsService.getFirestations();
         Iterator<Firestations> firestationsIterator = firestations.iterator();
         ArrayList<ListStationDTO> listStationDTOS = new ArrayList<>();
         try {
-            if (Objects.equals(stationNumber, firestationsIterator.next().getStation())) {
-                while (personsIterator.hasNext()) {
-                    Persons persons1 = personsIterator.next();
-                    Firestations firestations1 = firestationsIterator.next();
-                    MedicalRecords medicalRecords1 = medicalRecordsIterator.next();
-                    if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
-                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                        Date birthdate = format.parse(medicalRecords1.getBirthdate());
-                        ListStationDTO listStationDTO = new ListStationDTO();
-                        listStationDTO.setLastname(persons1.getLastname());
-                        listStationDTO.setPhone(persons1.getPhone());
-                        listStationDTO.setAge(getYears(birthdate));
-                        listStationDTO.setMedications(medicalRecords1.getMedications());
-                        listStationDTO.setAllergies(medicalRecords1.getAllergies());
-                        listStationDTOS.add(listStationDTO);
+            for (Firestations firestations1 : firestations) {
+                if (Objects.equals(stations, firestations1.getStation())) {
+                    for (Persons persons1 : persons) {
+                        if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                            ListStationDTO listStationDTO = new ListStationDTO();
+                            listStationDTO.setLastname(persons1.getLastname());
+                            listStationDTO.setPhone(persons1.getPhone());
+                            for (MedicalRecords medicalRecords1 : medicalRecords) {
+                                if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                    Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                                    listStationDTO.setAge(getYears(birthdate));
+                                    listStationDTO.setMedications(medicalRecords1.getMedications());
+                                    listStationDTO.setAllergies(medicalRecords1.getAllergies());
+                                }
+                            }
+                            listStationDTOS.add(listStationDTO);
+                        } else {
+                            personsIterator.next();
+                        }
                     }
+                } else {
+                    firestationsIterator.next();
                 }
             }
         } catch (Exception e) {
@@ -137,6 +147,7 @@ public class PersonsController {
 
     /**
      * Read - Get  person, medicalRecord
+     *
      * @param lastname - The lastname of person to search
      * @return - An ArrayList object of InfolastNameDTO
      */
@@ -173,8 +184,7 @@ public class PersonsController {
             } else {
                 iterator.next();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(infoPerson, HttpStatus.OK);
@@ -182,7 +192,8 @@ public class PersonsController {
 
     /**
      * Update - Update an existing persons
-     * @param id - The id of the persons to update
+     *
+     * @param id      - The id of the persons to update
      * @param persons - The persons object update
      * @return
      */
@@ -228,6 +239,7 @@ public class PersonsController {
 
     /**
      * Delete - Delete an person
+     *
      * @param id - The id of the person to delete
      */
     @DeleteMapping("/person/{id}")
@@ -240,15 +252,13 @@ public class PersonsController {
         }
     }
 
-    public static int getYears(Date date)
-    {
+    public static int getYears(Date date) {
         Calendar current = Calendar.getInstance();
         Calendar birthdate = Calendar.getInstance();
         birthdate.setTime(date);
         int yeardiff = current.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR);
-        current.add(Calendar.YEAR,-yeardiff);
-        if(birthdate.after(current))
-        {
+        current.add(Calendar.YEAR, -yeardiff);
+        if (birthdate.after(current)) {
             yeardiff = yeardiff - 1;
         }
         return yeardiff;
