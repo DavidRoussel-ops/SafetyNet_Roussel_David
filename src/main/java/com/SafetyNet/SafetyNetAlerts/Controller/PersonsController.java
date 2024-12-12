@@ -104,6 +104,42 @@ public class PersonsController {
         }
     }
 
+    @GetMapping("/fire")
+    @ResponseBody
+    public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<FireAddressDTO> fireAddressDTOS = new ArrayList<>();
+        try {
+            for (Persons persons1 : persons) {
+                if (Objects.equals(address, persons1.getAddress())) {
+                    FireAddressDTO fireAddressDTO = new FireAddressDTO();
+                    fireAddressDTO.setLastname(persons1.getLastname());
+                    fireAddressDTO.setPhone(persons1.getPhone());
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            fireAddressDTO.setAge(getYears(birthdate));
+                            fireAddressDTO.setMedications(medicalRecords1.getMedications());
+                            fireAddressDTO.setAllergies(medicalRecords1.getAllergies());
+                            for (Firestations firestations1 : firestations) {
+                                if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                                    fireAddressDTO.setStations(firestations1.getStation());
+                                    fireAddressDTOS.add(fireAddressDTO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(fireAddressDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/flood/stations")
     @ResponseBody
     public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam String stations) throws ParseException {
@@ -131,13 +167,13 @@ public class PersonsController {
                                 }
                             }
                             listStationDTOS.add(listStationDTO);
-                        } else {
+                        } /*else {
                             personsIterator.next();
-                        }
+                        }*/
                     }
-                } else {
+                } /*else {
                     firestationsIterator.next();
-                }
+                }*/
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
