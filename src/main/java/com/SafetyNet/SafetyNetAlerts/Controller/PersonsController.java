@@ -168,10 +168,8 @@ public class PersonsController {
     @ResponseBody
     public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam String stations) throws ParseException {
         Iterable<Persons> persons = personService.getPersons();
-        Iterator<Persons> personsIterator = persons.iterator();
         Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         Iterable<Firestations> firestations = firestationsService.getFirestations();
-        Iterator<Firestations> firestationsIterator = firestations.iterator();
         ArrayList<ListStationDTO> listStationDTOS = new ArrayList<>();
         try {
             for (Firestations firestations1 : firestations) {
@@ -188,16 +186,12 @@ public class PersonsController {
                                     listStationDTO.setAge(getYears(birthdate));
                                     listStationDTO.setMedications(medicalRecords1.getMedications());
                                     listStationDTO.setAllergies(medicalRecords1.getAllergies());
+                                    listStationDTOS.add(listStationDTO);
                                 }
                             }
-                            listStationDTOS.add(listStationDTO);
-                        } /*else {
-                            personsIterator.next();
-                        }*/
+                        }
                     }
-                } /*else {
-                    firestationsIterator.next();
-                }*/
+                }
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -215,34 +209,26 @@ public class PersonsController {
     @ResponseBody
     public ResponseEntity<ArrayList<InfolastNameDTO>> getPersonsByLastname(@PathVariable("lastName") String lastname) throws ParseException {
         Iterable<Persons> persons = personService.getPersons();
-        Iterator<Persons> iterator = persons.iterator();
         Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        Iterator<MedicalRecords> iterator1 = medicalRecords.iterator();
         ArrayList<InfolastNameDTO> infoPerson = new ArrayList<>();
         try {
-            if (Objects.equals(lastname, iterator.next().getLastname())) {
-                while (iterator.hasNext()) {
-                    Persons persons1 = iterator.next();
-                    if (Objects.equals(lastname, persons1.getLastname())) {
-                        InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
-                        infolastNameDTO.setLastname(persons1.getLastname());
-                        infolastNameDTO.setEmail(persons1.getEmail());
-                        infolastNameDTO.setAddress(persons1.getAddress());
-                        if (iterator1.hasNext()) {
-                            MedicalRecords medicalRecords1 = iterator1.next();
-                            if (Objects.equals(lastname, medicalRecords1.getLastname())) {
-                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                                Date birthdate = format.parse(medicalRecords1.getBirthdate());
-                                infolastNameDTO.setAge(getYears(birthdate));
-                                infolastNameDTO.setMedications(medicalRecords1.getMedications());
-                                infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
-                            }
+            for (Persons persons1 : persons) {
+                if (Objects.equals(lastname, persons1.getLastname())) {
+                    InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
+                    infolastNameDTO.setLastname(persons1.getLastname());
+                    infolastNameDTO.setEmail(persons1.getEmail());
+                    infolastNameDTO.setAddress(persons1.getAddress());
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(medicalRecords1.getFirstname(), persons1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            infolastNameDTO.setAge(getYears(birthdate));
+                            infolastNameDTO.setMedications(medicalRecords1.getMedications());
+                            infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+                            infoPerson.add(infolastNameDTO);
                         }
-                        infoPerson.add(infolastNameDTO);
                     }
                 }
-            } else {
-                iterator.next();
             }
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
