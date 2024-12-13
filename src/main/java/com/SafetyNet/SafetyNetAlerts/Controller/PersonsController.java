@@ -104,6 +104,30 @@ public class PersonsController {
         }
     }
 
+    @GetMapping("/phoneAlert")
+    @ResponseBody
+    public ResponseEntity<ArrayList<PhoneDTO>> getPhoneAlerts(@RequestParam(defaultValue = "firestation") String firestation) {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<PhoneDTO> phoneDTOS = new ArrayList<>();
+        try {
+            for (Firestations firestations1 : firestations) {
+                if (Objects.equals(firestations1.getStation(), firestation)) {
+                    for (Persons persons1 : persons) {
+                        if (Objects.equals(persons1.getAddress(), firestations1.getAddress())) {
+                            PhoneDTO phoneDTO = new PhoneDTO();
+                            phoneDTO.setPhone(persons1.getPhone());
+                            phoneDTOS.add(phoneDTO);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(phoneDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/fire")
     @ResponseBody
     public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) {
