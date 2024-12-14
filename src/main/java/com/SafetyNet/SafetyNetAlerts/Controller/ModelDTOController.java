@@ -1,0 +1,293 @@
+package com.SafetyNet.SafetyNetAlerts.Controller;
+
+import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
+import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
+import com.SafetyNet.SafetyNetAlerts.Model.Persons;
+import com.SafetyNet.SafetyNetAlerts.ModelDTO.*;
+import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
+import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
+import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
+import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+
+@RestController
+public class ModelDTOController {
+
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private BusinessService businessService;
+
+    @Autowired
+    private FirestationsService firestationsService;
+
+    @Autowired
+    private MedicalRecordsService medicalRecordsService;
+
+    /**
+     * Read - Get  person
+     *
+     * @return - An ArrayList object of EmailDTO
+     */
+    @GetMapping("/communityEmail")
+    @ResponseBody
+    public ResponseEntity<ArrayList<EmailDTO>> getAllMail(@RequestParam(defaultValue = "city") String city) {
+        Iterable<Persons> persons = personService.getPersons();
+        ArrayList<EmailDTO> mail = new ArrayList<>();
+        try {
+            for (Persons person : persons) {
+                if (Objects.equals(city, person.getCity())) {
+                    EmailDTO emailDTO = new EmailDTO();
+                    emailDTO.setEmail(person.getEmail());
+                    mail.add(emailDTO);
+                } else {
+                    return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(mail, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/childAlert")
+    @ResponseBody
+    public ResponseEntity<ArrayList<ChildAlertDTO>> getChildAlert(@RequestParam(defaultValue = "address") String address) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<ChildAlertDTO> childAlertDTOS = new ArrayList<>();
+        ArrayList<OtherPeopleDTO> arrayList = new ArrayList<>();
+        try {
+            for (Persons persons1 : persons) {
+                if (Objects.equals(address, persons1.getAddress())) {
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            int isChild = getYears(birthdate);
+                            if (isChild > 18) {
+                                OtherPeopleDTO otherPeopleDTO = new OtherPeopleDTO();
+                                otherPeopleDTO.setFirstname(persons1.getFirstname());
+                                otherPeopleDTO.setLastname(persons1.getLastname());
+                                arrayList.add(otherPeopleDTO);
+                            } else {
+                                ChildAlertDTO childAlertDTO = new ChildAlertDTO();
+                                childAlertDTO.setLastname(persons1.getLastname());
+                                childAlertDTO.setFirstname(persons1.getFirstname());
+                                childAlertDTO.setAge(getYears(birthdate));
+                                childAlertDTO.setOthePeople(arrayList);
+                                childAlertDTOS.add(childAlertDTO);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(childAlertDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/phoneAlert")
+    @ResponseBody
+    public ResponseEntity<ArrayList<PhoneDTO>> getPhoneAlerts(@RequestParam(defaultValue = "firestation") String firestation) {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<PhoneDTO> phoneDTOS = new ArrayList<>();
+        try {
+            for (Firestations firestations1 : firestations) {
+                if (Objects.equals(firestations1.getStation(), firestation)) {
+                    for (Persons persons1 : persons) {
+                        if (Objects.equals(persons1.getAddress(), firestations1.getAddress())) {
+                            PhoneDTO phoneDTO = new PhoneDTO();
+                            phoneDTO.setPhone(persons1.getPhone());
+                            phoneDTOS.add(phoneDTO);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(phoneDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/fire")
+    @ResponseBody
+    public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<FireAddressDTO> fireAddressDTOS = new ArrayList<>();
+        try {
+            for (Persons persons1 : persons) {
+                if (Objects.equals(address, persons1.getAddress())) {
+                    FireAddressDTO fireAddressDTO = new FireAddressDTO();
+                    fireAddressDTO.setLastname(persons1.getLastname());
+                    fireAddressDTO.setPhone(persons1.getPhone());
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            fireAddressDTO.setAge(getYears(birthdate));
+                            fireAddressDTO.setMedications(medicalRecords1.getMedications());
+                            fireAddressDTO.setAllergies(medicalRecords1.getAllergies());
+                            for (Firestations firestations1 : firestations) {
+                                if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                                    fireAddressDTO.setStations(firestations1.getStation());
+                                    fireAddressDTOS.add(fireAddressDTO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(fireAddressDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/firestations")
+    @ResponseBody
+    public ResponseEntity<ArrayList<PersonsZoneFirestationsDTO>> getPersonsByZone(@RequestParam(defaultValue = "stationNumber") String stationNumber) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<PersonsZoneFirestationsDTO> personsZoneFirestationsDTOS = new ArrayList<>();
+        PersonsZoneFirestationsDTO personsZoneFirestationsDTO = new PersonsZoneFirestationsDTO();
+        ArrayList<InfoPersonsZoneDTO> infoPersonsZoneDTOS = new ArrayList<>();
+        int adult = 0;
+        int child = 0;
+        try {
+            for (Firestations firestations1 : firestations) {
+                if (Objects.equals(stationNumber, firestations1.getStation())) {
+                    for (Persons persons1 : persons) {
+                        if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                            for (MedicalRecords medicalRecords1 : medicalRecords) {
+                                if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                                    InfoPersonsZoneDTO infoPersonsZoneDTO = new InfoPersonsZoneDTO();
+                                    infoPersonsZoneDTO.setFirstname(persons1.getFirstname());
+                                    infoPersonsZoneDTO.setLastname(persons1.getLastname());
+                                    infoPersonsZoneDTO.setPhone(persons1.getPhone());
+                                    infoPersonsZoneDTO.setAddress(persons1.getAddress());
+                                    infoPersonsZoneDTOS.add(infoPersonsZoneDTO);
+                                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                    Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                                    int isAdult = getYears(birthdate);
+                                    if (isAdult > 18) {
+                                        adult ++;
+                                    } else {
+                                        child ++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            personsZoneFirestationsDTO.setInfoPersonsZoneDTOS(infoPersonsZoneDTOS);
+            personsZoneFirestationsDTO.setAdult(adult);
+            personsZoneFirestationsDTO.setChild(child);
+            personsZoneFirestationsDTOS.add(personsZoneFirestationsDTO);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(personsZoneFirestationsDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/flood/stations")
+    @ResponseBody
+    public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam(defaultValue = "stations") String stations) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<ListStationDTO> listStationDTOS = new ArrayList<>();
+        try {
+            for (Firestations firestations1 : firestations) {
+                if (Objects.equals(stations, firestations1.getStation())) {
+                    for (Persons persons1 : persons) {
+                        if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
+                            ListStationDTO listStationDTO = new ListStationDTO();
+                            listStationDTO.setLastname(persons1.getLastname());
+                            listStationDTO.setPhone(persons1.getPhone());
+                            for (MedicalRecords medicalRecords1 : medicalRecords) {
+                                if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                                    Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                                    listStationDTO.setAge(getYears(birthdate));
+                                    listStationDTO.setMedications(medicalRecords1.getMedications());
+                                    listStationDTO.setAllergies(medicalRecords1.getAllergies());
+                                    listStationDTOS.add(listStationDTO);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(listStationDTOS, HttpStatus.OK);
+    }
+
+    /**
+     * Read - Get  person, medicalRecord
+     *
+     * @param lastname - The lastname of person to search
+     * @return - An ArrayList object of InfolastNameDTO
+     */
+    @GetMapping("/personInfolastName={lastName}")
+    @ResponseBody
+    public ResponseEntity<ArrayList<InfolastNameDTO>> getPersonsByLastname(@PathVariable("lastName") String lastname) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<InfolastNameDTO> infoPerson = new ArrayList<>();
+        try {
+            for (Persons persons1 : persons) {
+                if (Objects.equals(lastname, persons1.getLastname())) {
+                    InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
+                    infolastNameDTO.setLastname(persons1.getLastname());
+                    infolastNameDTO.setEmail(persons1.getEmail());
+                    infolastNameDTO.setAddress(persons1.getAddress());
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(medicalRecords1.getFirstname(), persons1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            infolastNameDTO.setAge(getYears(birthdate));
+                            infolastNameDTO.setMedications(medicalRecords1.getMedications());
+                            infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+                            infoPerson.add(infolastNameDTO);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(infoPerson, HttpStatus.OK);
+    }
+
+    public static int getYears(Date date) {
+        Calendar current = Calendar.getInstance();
+        Calendar birthdate = Calendar.getInstance();
+        birthdate.setTime(date);
+        int yeardiff = current.get(Calendar.YEAR) - birthdate.get(Calendar.YEAR);
+        current.add(Calendar.YEAR, -yeardiff);
+        if (birthdate.after(current)) {
+            yeardiff = yeardiff - 1;
+        }
+        return yeardiff;
+    }
+}
