@@ -104,6 +104,44 @@ public class PersonsController {
         }
     }
 
+    @GetMapping("/childAlert")
+    @ResponseBody
+    public ResponseEntity<ArrayList<ChildAlertDTO>> getChildAlert(@RequestParam(defaultValue = "address") String address) throws ParseException {
+        Iterable<Persons> persons = personService.getPersons();
+        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<ChildAlertDTO> childAlertDTOS = new ArrayList<>();
+        ArrayList<OtherPeopleDTO> arrayList = new ArrayList<>();
+        try {
+            for (Persons persons1 : persons) {
+                if (Objects.equals(address, persons1.getAddress())) {
+                    for (MedicalRecords medicalRecords1 : medicalRecords) {
+                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            Date birthdate = format.parse(medicalRecords1.getBirthdate());
+                            int isChild = getYears(birthdate);
+                            if (isChild > 18) {
+                                OtherPeopleDTO otherPeopleDTO = new OtherPeopleDTO();
+                                otherPeopleDTO.setFirstname(persons1.getFirstname());
+                                otherPeopleDTO.setLastname(persons1.getLastname());
+                                arrayList.add(otherPeopleDTO);
+                            } else {
+                                ChildAlertDTO childAlertDTO = new ChildAlertDTO();
+                                childAlertDTO.setLastname(persons1.getLastname());
+                                childAlertDTO.setFirstname(persons1.getFirstname());
+                                childAlertDTO.setAge(getYears(birthdate));
+                                childAlertDTO.setOthePeople(arrayList);
+                                childAlertDTOS.add(childAlertDTO);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(childAlertDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/phoneAlert")
     @ResponseBody
     public ResponseEntity<ArrayList<PhoneDTO>> getPhoneAlerts(@RequestParam(defaultValue = "firestation") String firestation) {
@@ -130,7 +168,7 @@ public class PersonsController {
 
     @GetMapping("/fire")
     @ResponseBody
-    public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) {
+    public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) throws ParseException {
         Iterable<Persons> persons = personService.getPersons();
         Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         Iterable<Firestations> firestations = firestationsService.getFirestations();
