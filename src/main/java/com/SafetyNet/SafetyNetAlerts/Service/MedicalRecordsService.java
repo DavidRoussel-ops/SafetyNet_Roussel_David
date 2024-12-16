@@ -15,18 +15,32 @@ public class MedicalRecordsService {
     @Autowired
     private MedicalRecordsRepository medicalRecordsRepository;
 
+    /**
+     * @param id
+     * @return MedicalRecords
+     */
     public Optional<MedicalRecords> getMedicalRecord(final Long id) {
         return medicalRecordsRepository.findById(id);
     }
 
+    /**
+     * @return MedicalRecords
+     */
     public Iterable<MedicalRecords> getMedicalRecords() {
         return medicalRecordsRepository.findAll();
     }
 
+    /**
+     * @param id
+     */
     public void deleteMedicalRecord(final Long id) {
         medicalRecordsRepository.deleteById(id);
     }
 
+    /**
+     * @param medicalRecords
+     * @return MedicalRecords
+     */
     public MedicalRecords saveMedicalRecord(MedicalRecords medicalRecords) {
         return medicalRecordsRepository.save(medicalRecords);
     }
