@@ -15,18 +15,32 @@ public class FirestationsService {
     @Autowired
     private FirestationsRepository firestationsRepository;
 
+    /**
+     * @param id
+     * @return Firestations
+     */
     public Optional<Firestations> getFirestation(final Long id) {
         return firestationsRepository.findById(id);
     }
 
+    /**
+     * @return Firestations
+     */
     public Iterable<Firestations> getFirestations() {
         return firestationsRepository.findAll();
     }
 
+    /**
+     * @param id
+     */
     public void deleteFirestation(final Long id) {
         firestationsRepository.deleteById(id);
     }
 
+    /**
+     * @param firestations
+     * @return Firestations
+     */
     public Firestations saveFirestation(Firestations firestations) {
         return firestationsRepository.save(firestations);
     }
