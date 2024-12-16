@@ -35,10 +35,10 @@ public class ModelDTOController {
     @Autowired
     private MedicalRecordsService medicalRecordsService;
 
+
     /**
-     * Read - Get  person
-     *
-     * @return - An ArrayList object of EmailDTO
+     * @param city
+     * @return ArrayList<EmailDTO>>
      */
     @GetMapping("/communityEmail")
     @ResponseBody
@@ -61,6 +61,11 @@ public class ModelDTOController {
         }
     }
 
+    /**
+     * @param address
+     * @return ArrayList<ChildAlertDTO>
+     * @throws ParseException
+     */
     @GetMapping("/childAlert")
     @ResponseBody
     public ResponseEntity<ArrayList<ChildAlertDTO>> getChildAlert(@RequestParam(defaultValue = "address") String address) throws ParseException {
@@ -99,6 +104,10 @@ public class ModelDTOController {
         return new ResponseEntity<>(childAlertDTOS, HttpStatus.OK);
     }
 
+    /**
+     * @param firestation
+     * @return <ArrayList<PhoneDTO>>
+     */
     @GetMapping("/phoneAlert")
     @ResponseBody
     public ResponseEntity<ArrayList<PhoneDTO>> getPhoneAlerts(@RequestParam(defaultValue = "firestation") String firestation) {
@@ -123,6 +132,11 @@ public class ModelDTOController {
         return new ResponseEntity<>(phoneDTOS, HttpStatus.OK);
     }
 
+    /**
+     * @param address
+     * @return <ArrayList<FireAddressDTO>>
+     * @throws ParseException
+     */
     @GetMapping("/fire")
     @ResponseBody
     public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) throws ParseException {
@@ -159,6 +173,11 @@ public class ModelDTOController {
         return new ResponseEntity<>(fireAddressDTOS, HttpStatus.OK);
     }
 
+    /**
+     * @param stationNumber
+     * @return <ArrayList<PersonsZoneFirestationsDTO>>
+     * @throws ParseException
+     */
     @GetMapping("/firestations")
     @ResponseBody
     public ResponseEntity<ArrayList<PersonsZoneFirestationsDTO>> getPersonsByZone(@RequestParam(defaultValue = "stationNumber") String stationNumber) throws ParseException {
@@ -187,9 +206,9 @@ public class ModelDTOController {
                                     Date birthdate = format.parse(medicalRecords1.getBirthdate());
                                     int isAdult = getYears(birthdate);
                                     if (isAdult > 18) {
-                                        adult ++;
+                                        adult++;
                                     } else {
-                                        child ++;
+                                        child++;
                                     }
                                 }
                             }
@@ -207,6 +226,11 @@ public class ModelDTOController {
         return new ResponseEntity<>(personsZoneFirestationsDTOS, HttpStatus.OK);
     }
 
+    /**
+     * @param stations
+     * @return <ArrayList<ListStationDTO>>
+     * @throws ParseException
+     */
     @GetMapping("/flood/stations")
     @ResponseBody
     public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam(defaultValue = "stations") String stations) throws ParseException {
@@ -279,6 +303,10 @@ public class ModelDTOController {
         return new ResponseEntity<>(infoPerson, HttpStatus.OK);
     }
 
+    /**
+     * @param date
+     * @return yeardiff
+     */
     public static int getYears(Date date) {
         Calendar current = Calendar.getInstance();
         Calendar birthdate = Calendar.getInstance();
