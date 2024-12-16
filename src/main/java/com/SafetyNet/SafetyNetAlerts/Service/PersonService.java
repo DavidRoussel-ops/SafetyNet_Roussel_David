@@ -15,18 +15,32 @@ public class PersonService {
     @Autowired
     private final PersonsRepository personsRepository;
 
+    /**
+     * @param id
+     * @return Persons
+     */
     public Optional<Persons> getPerson(final Long id) {
         return personsRepository.findById(id);
     }
 
+    /**
+     * @return Persons
+     */
     public Iterable<Persons> getPersons() {
         return personsRepository.findAll();
     }
 
+    /**
+     * @param id
+     */
     public void deletePerson(final Long id) {
         personsRepository.deleteById(id);
     }
 
+    /**
+     * @param persons
+     * @return Persons
+     */
     public Persons savePerson(Persons persons) {
         return personsRepository.save(persons);
     }
