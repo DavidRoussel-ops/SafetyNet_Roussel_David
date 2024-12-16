@@ -10,12 +10,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SafetyNetAlertsApplication implements CommandLineRunner {
 
 	@Autowired
-	BusinessService businessService;
+	private BusinessService businessService;
 
+	/**
+	 * @param args
+	 */
     public static void main(String[] args) {
 		SpringApplication.run(SafetyNetAlertsApplication.class, args);
 	}
 
+	/**
+	 * @param args
+	 * @throws Exception
+	 */
 	public void run(String... args) throws Exception {
 		System.out.println("L'application est lancer");
 		businessService.createJsonBdd();
