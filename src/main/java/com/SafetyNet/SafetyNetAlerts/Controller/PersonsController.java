@@ -2,9 +2,6 @@ package com.SafetyNet.SafetyNetAlerts.Controller;
 
 
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
-import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
-import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
-import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +119,7 @@ public class PersonsController {
             logger.info("Réponse réussi pour la requête updatePerson: {}", personsOptional);
             return new ResponseEntity<>(personService.savePerson(currentPersons), HttpStatus.OK);
         } else {
+            logger.error("Erreur lors du traitement de la requête updatePerson");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
