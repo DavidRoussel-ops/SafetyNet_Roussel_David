@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -132,9 +134,9 @@ public class PersonsControllerTest {
         personsInitial.setEmail("jaboy@email.com");
         Persons personsUpdated = new Persons();
         personsUpdated.setId(id);
-        personsUpdated.setFirstname("Pierre");
-        personsUpdated.setLastname("Boyd");
-        personsUpdated.setAddress("1509 Culver St");
+        personsUpdated.setFirstname(personsInitial.getFirstname());
+        personsUpdated.setLastname(personsInitial.getLastname());
+        personsUpdated.setAddress("1510 Culver St");
         personsUpdated.setCity("Culver");
         personsUpdated.setZip("97451");
         personsUpdated.setPhone("841-874-6512");
@@ -146,7 +148,7 @@ public class PersonsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstname").value(personsUpdated.getFirstname()))
+                .andExpect(jsonPath("$.address").value(personsUpdated.getAddress()))
                 .andDo(print());
     }
 
