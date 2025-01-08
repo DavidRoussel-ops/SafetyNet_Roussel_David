@@ -186,11 +186,11 @@ public class ModelDTOController {
                                 logger.debug("Boucle de firestations1 en cours : {}", firestations1);
                                 if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
                                     fireAddressDTO.setStations(firestations1.getStation());
-                                    fireAddressDTOS.add(fireAddressDTO);
                                 }
                             }
                         }
                     }
+                    fireAddressDTOS.add(fireAddressDTO);
                 }
             }
         } catch (Exception e) {
