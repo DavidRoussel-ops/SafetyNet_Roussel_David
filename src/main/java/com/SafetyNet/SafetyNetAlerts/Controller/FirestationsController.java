@@ -83,7 +83,7 @@ public class FirestationsController {
             return new ResponseEntity<>(firestations1, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête updateFirestation: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
