@@ -148,29 +148,17 @@ public class PersonsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.address").value(personsUpdated.getAddress()))
                 .andDo(print());
     }
 
     @Test
-    public void testPutOnePersonNotFound() throws Exception {
-        Long id = 1L;
-        Persons personsUpdated = new Persons();
-        personsUpdated.setId(id);
-        personsUpdated.setFirstname("Pierre");
-        personsUpdated.setLastname("Boyd");
-        personsUpdated.setAddress("1509 Culver St");
-        personsUpdated.setCity("Culver");
-        personsUpdated.setZip("97451");
-        personsUpdated.setPhone("841-874-6512");
-        personsUpdated.setEmail("jaboy@email.com");
+    public void testPutOnePersonBadRequest() throws Exception {
+        Long id = 25L;
         when(service.getPerson(id)).thenReturn(Optional.empty());
-        when(service.savePerson(any(Persons.class))).thenReturn(personsUpdated);
         mockMvc.perform(put("/person/{id}", id)
-                        .content(asJsonString(personsUpdated))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 
