@@ -69,7 +69,8 @@ public class FirestationsService {
             }
             saveFirestation(currentFirestation);
             return currentFirestation;
+        } else {
+            return null;
         }
-        return null;
     }
 }
