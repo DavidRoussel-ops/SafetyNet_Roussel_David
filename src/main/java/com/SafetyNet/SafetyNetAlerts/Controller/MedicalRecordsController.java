@@ -88,36 +88,12 @@ public class MedicalRecordsController {
     @PutMapping("/medicalRecord/{id}")
     public ResponseEntity<MedicalRecords> updateMedicalRecord(@PathVariable("id") final Long id, @RequestBody MedicalRecords medicalRecord) {
         logger.info("Requête updateMedicalRecord avec en paramêtre: {}", id);
-        Optional<MedicalRecords> medicalRecordsOptional = medicalRecordsService.getMedicalRecord(id);
-        logger.debug("medicalRecordsService.getMedicalRecord() en cours : {}", medicalRecordsOptional);
-        if (medicalRecordsOptional.isPresent()) {
-            MedicalRecords currentMedicalRecords = medicalRecordsOptional.get();
-
-            String firstname = medicalRecord.getFirstname();
-            if (firstname != null) {
-                currentMedicalRecords.setFirstname(firstname);
-            }
-            String lastname = medicalRecord.getLastname();
-            if (lastname != null) {
-                currentMedicalRecords.setLastname(lastname);
-            }
-            String birthdate = medicalRecord.getBirthdate();
-            if (birthdate != null) {
-                currentMedicalRecords.setBirthdate(birthdate);
-            }
-            String medications = medicalRecord.getMedications();
-            if (medications != null) {
-                currentMedicalRecords.setMedications(medications);
-            }
-            String allergies = medicalRecord.getAllergies();
-            if (allergies != null) {
-                currentMedicalRecords.setAllergies(allergies);
-            }
-            logger.info("Réponse réussi pour la requête updateMedicalRecord: {}", medicalRecordsOptional);
-            return new ResponseEntity<>(medicalRecordsService.saveMedicalRecord(currentMedicalRecords), HttpStatus.OK);
-        } else {
-            logger.error("Erreur lors du traitement de la requête updateMedicalRecord");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        MedicalRecords medicalRecords1 = medicalRecordsService.putMedicalRecord(id, medicalRecord);
+        try {
+            return new ResponseEntity<>(medicalRecords1, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement de la requête updateMedicalRecord: {]", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
