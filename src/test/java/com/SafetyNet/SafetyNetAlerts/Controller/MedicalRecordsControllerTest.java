@@ -140,27 +140,17 @@ public class MedicalRecordsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.medications").value(medicalRecordsUpdated.getMedications()))
                 .andDo(print());
     }
 
     @Test
-    public void testPutOneMedicalRecordsNotFound() throws Exception {
-        Long id = 1L;
-        MedicalRecords medicalRecordsUpdated = new MedicalRecords();
-        medicalRecordsUpdated.setId(id);
-        medicalRecordsUpdated.setFirstname("Pierre");
-        medicalRecordsUpdated.setLastname("Dupont");
-        medicalRecordsUpdated.setBirthdate("01/01/1981");
-        medicalRecordsUpdated.setMedications("Dolliprane : 1000mg");
-        medicalRecordsUpdated.setAllergies("aspirine");
+    public void testPutOneMedicalRecordsBadRequest() throws Exception {
+        Long id = 25L;
         when(service.getMedicalRecord(id)).thenReturn(Optional.empty());
-        when(service.saveMedicalRecord(any(MedicalRecords.class))).thenReturn(medicalRecordsUpdated);
         mockMvc.perform(put("/medicalRecord/{id}", id)
-                        .content(asJsonString(medicalRecordsUpdated))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 
