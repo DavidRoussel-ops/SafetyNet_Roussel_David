@@ -78,25 +78,12 @@ public class FirestationsController {
     @PutMapping("/firestation/{id}")
     public ResponseEntity<Firestations> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) {
         logger.info("Requête updateFirestation avec en paramètre: {}", id);
-        Optional<Firestations> firestationsOptional = firestationsService.getFirestation(id);
-        logger.debug("firestationsService.getFirestation() en cours : {}", firestationsOptional);
-        if (firestationsOptional.isPresent()) {
-            Firestations currentFirestation = firestationsOptional.get();
-
-            String address = firestation.getAddress();
-            if (address != null) {
-                currentFirestation.setAddress(address);
-            }
-
-            String station = firestation.getStation();
-            if (station != null) {
-                currentFirestation.setStation(station);
-            }
-            logger.info("Réponse réussi pour la requête updateFirestation: {}", firestationsOptional);
-            return new ResponseEntity<>(firestationsService.saveFirestation(currentFirestation), HttpStatus.OK);
-        } else {
-            logger.error("Erreur lors du traitement de la requête updateFirestation");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Firestations firestations1 = firestationsService.putFirestation(id, firestation);
+        try {
+            return new ResponseEntity<>(firestations1, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement de la requête updateFirestation: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
