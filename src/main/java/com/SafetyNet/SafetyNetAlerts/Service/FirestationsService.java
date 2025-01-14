@@ -4,6 +4,8 @@ import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
 import com.SafetyNet.SafetyNetAlerts.Repository.FirestationsRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -43,5 +45,31 @@ public class FirestationsService {
      */
     public Firestations saveFirestation(Firestations firestations) {
         return firestationsRepository.save(firestations);
+    }
+
+    /**
+     *
+     * @param id
+     * @param firestations
+     * @return currentFirestation
+     */
+    public Firestations putFirestation(final Long id, final Firestations firestations) {
+        Optional<Firestations> firestationsOptional = getFirestation(id);
+        if (firestationsOptional.isPresent()) {
+            Firestations currentFirestation = firestationsOptional.get();
+
+            String address = firestations.getAddress();
+            if (address != null) {
+                currentFirestation.setAddress(address);
+            }
+
+            String station = firestations.getStation();
+            if (station != null) {
+                currentFirestation.setStation(station);
+            }
+            saveFirestation(currentFirestation);
+            return currentFirestation;
+        }
+        return null;
     }
 }
