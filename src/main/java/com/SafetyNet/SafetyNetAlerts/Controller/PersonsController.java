@@ -83,44 +83,12 @@ public class PersonsController {
     @PutMapping("/person/{id}")
     public ResponseEntity<Persons> updatePerson(@PathVariable("id") final Long id, @RequestBody Persons persons) {
         logger.info("Requête updatePerson avec en paramètre: {}", id);
-        Optional<Persons> personsOptional = personService.getPerson(id);
-        logger.debug("personService.getPerson() en cours : {}", personsOptional);
-        if (personsOptional.isPresent()) {
-            Persons currentPersons = personsOptional.get();
-
-            String firstName = persons.getFirstname();
-            if (firstName != null) {
-                currentPersons.setFirstname(firstName);
-            }
-            String lastName = persons.getLastname();
-            if (lastName != null) {
-                currentPersons.setLastname(lastName);
-            }
-            String address = persons.getAddress();
-            if (address != null) {
-                currentPersons.setAddress(address);
-            }
-            String city = persons.getCity();
-            if (city != null) {
-                currentPersons.setCity(city);
-            }
-            String zip = persons.getZip();
-            if (zip != null) {
-                currentPersons.setZip(zip);
-            }
-            String phone = persons.getPhone();
-            if (phone != null) {
-                currentPersons.setPhone(phone);
-            }
-            String email = persons.getEmail();
-            if (email != null) {
-                currentPersons.setEmail(email);
-            }
-            logger.info("Réponse réussi pour la requête updatePerson: {}", personsOptional);
-            return new ResponseEntity<>(personService.savePerson(currentPersons), HttpStatus.OK);
-        } else {
-            logger.error("Erreur lors du traitement de la requête updatePerson");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Persons persons1 = personService.putPerson(id, persons);
+        try {
+            return new ResponseEntity<>(persons1, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement de la requête updatePerson: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
