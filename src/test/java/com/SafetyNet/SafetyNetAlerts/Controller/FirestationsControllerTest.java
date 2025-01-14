@@ -120,19 +120,13 @@ public class FirestationsControllerTest {
     }
 
     @Test
-    public void testPutOneFirestationsNotFound() throws Exception {
-        Long id = 1L;
-        Firestations firestationsUpdated = new Firestations();
-        firestationsUpdated.setId(id);
-        firestationsUpdated.setAddress("12 rue de l'aéroport");
-        firestationsUpdated.setStation("2");
+    public void testPutOneFirestationsBadRequest() throws Exception {
+        Long id = 25L;
         when(service.getFirestation(id)).thenReturn(Optional.empty());
-        when(service.saveFirestation(any(Firestations.class))).thenReturn(firestationsUpdated);
         mockMvc.perform(put("/firestation/{id}", id)
-                        .content(asJsonString(firestationsUpdated))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 
