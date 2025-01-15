@@ -1,5 +1,8 @@
 package com.SafetyNet.SafetyNetAlerts;
 
+import com.SafetyNet.SafetyNetAlerts.Repository.FirestationsRepository;
+import com.SafetyNet.SafetyNetAlerts.Repository.MedicalRecordsRepository;
+import com.SafetyNet.SafetyNetAlerts.Repository.PersonsRepository;
 import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,9 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SafetyNetAlertsApplication implements CommandLineRunner {
-
-	@Autowired
-	private BusinessService businessService;
 
 	/**
 	 * @param args
@@ -25,7 +25,6 @@ public class SafetyNetAlertsApplication implements CommandLineRunner {
 	 */
 	public void run(String... args) throws Exception {
 		System.out.println("L'application est lancer");
-		businessService.createJsonBdd();
 	}
 
 }
