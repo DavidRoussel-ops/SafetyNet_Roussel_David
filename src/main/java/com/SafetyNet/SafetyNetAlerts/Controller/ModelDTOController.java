@@ -32,9 +32,6 @@ public class ModelDTOController {
     private PersonService personService;
 
     @Autowired
-    private BusinessService businessService;
-
-    @Autowired
     private FirestationsService firestationsService;
 
     @Autowired
