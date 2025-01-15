@@ -2,20 +2,17 @@ package com.SafetyNet.SafetyNetAlerts.Service;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.Repository.PersonsRepository;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Data
+
 @Service
 public class PersonService {
 
     @Autowired
-    private final PersonsRepository personsRepository;
+    private PersonsRepository personsRepository;
 
     /**
      * @param id
@@ -47,6 +44,12 @@ public class PersonService {
         return personsRepository.save(persons);
     }
 
+    /**
+     *
+     * @param id
+     * @param persons
+     * @return currentPersons
+     */
     public Persons putPerson(final Long id, final Persons persons) {
         Optional<Persons> personsOptional = getPerson(id);
         if (personsOptional.isPresent()) {
