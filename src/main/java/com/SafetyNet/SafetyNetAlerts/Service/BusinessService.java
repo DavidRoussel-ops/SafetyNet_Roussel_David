@@ -14,7 +14,7 @@ import java.io.IOException;
 @Component
 public class BusinessService {
 
-    @Autowired
+    /*@Autowired
     PersonService personService;
 
     @Autowired
@@ -60,5 +60,5 @@ public class BusinessService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }
