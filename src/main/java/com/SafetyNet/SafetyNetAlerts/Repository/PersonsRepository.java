@@ -1,10 +1,8 @@
 package com.SafetyNet.SafetyNetAlerts.Repository;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
-import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +12,8 @@ import java.io.IOException;
 @Repository
 public interface PersonsRepository extends CrudRepository<Persons, Long> {
 
-    static Persons personsJSON() {
+    static String personsJSON() {
         try {
-            PersonService personService = new PersonService();
             ObjectMapper mapper = new ObjectMapper();
             File file = new File("src/main/resources/data.json");
             JsonNode jsonNode = mapper.readTree(file);
@@ -30,7 +27,7 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
                 persons.setZip(node.path("zip").asText());
                 persons.setPhone(node.path("phone").asText());
                 persons.setEmail(node.path("email").asText());
-                personService.savePerson(persons);
+                return mapper.writeValueAsString(persons);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
