@@ -5,6 +5,9 @@ import com.SafetyNet.SafetyNetAlerts.Repository.FirestationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -17,15 +20,15 @@ public class FirestationsService {
      * @param id
      * @return Firestations
      */
-    public Optional<Firestations> getFirestation(final Long id) {
-        return firestationsRepository.findById(id);
+    public Firestations getFirestation(final Long id) {
+        return firestationsRepository.findFirestationById(id);
     }
 
     /**
      * @return Firestations
      */
-    public Iterable<Firestations> getFirestations() {
-        return firestationsRepository.findAll();
+    public ArrayList<Firestations> getFirestations() {
+        return firestationsRepository.findAllFirestations();
     }
 
     /**
@@ -39,8 +42,8 @@ public class FirestationsService {
      * @param firestations
      * @return Firestations
      */
-    public Firestations saveFirestation(Firestations firestations) {
-        return firestationsRepository.save(firestations);
+    public void saveFirestation(Firestations firestations) throws IOException {
+        firestationsRepository.saveFirestation(firestations);
     }
 
     /**
@@ -49,10 +52,10 @@ public class FirestationsService {
      * @param firestations
      * @return currentFirestation
      */
-    public Firestations putFirestation(final Long id, final Firestations firestations) {
-        Optional<Firestations> firestationsOptional = getFirestation(id);
-        if (firestationsOptional.isPresent()) {
-            Firestations currentFirestation = firestationsOptional.get();
+    public Firestations putFirestation(final Long id, final Firestations firestations) throws IOException {
+        Firestations firestationsOptional = getFirestation(id);
+        if (Objects.equals(id, firestationsOptional.getId())) {
+            Firestations currentFirestation = firestationsOptional;
 
             String address = firestations.getAddress();
             if (address != null) {
