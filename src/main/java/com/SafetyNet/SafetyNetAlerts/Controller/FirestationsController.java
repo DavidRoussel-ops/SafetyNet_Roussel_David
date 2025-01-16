@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -25,13 +27,13 @@ public class FirestationsController {
      * @return the firestation object saved
      */
     @PostMapping("/firestation")
-    public ResponseEntity<Firestations> createFirestations(@RequestBody Firestations firestations) {
+    public ResponseEntity<HttpStatus> createFirestations(@RequestBody Firestations firestations) throws IOException {
         logger.info("Requête createFirestations avec en paramètre: {}", firestations);
-        Firestations firestations1 = firestationsService.saveFirestation(firestations);
-        logger.debug("firestationsService.saveFirestation() en cours : {}", firestations1);
+        firestationsService.saveFirestation(firestations);
+        //logger.debug("firestationsService.saveFirestation() en cours : {}", firestationsService.saveFirestation(firestations));
         try {
-            logger.info("Réponse réussi pour la requête createFirestations: {}", firestations1);
-            return new ResponseEntity<>(firestations1, HttpStatus.CREATED);
+            logger.info("Réponse réussi pour la requête createFirestations: {}", HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête createFirestations : {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,9 +48,14 @@ public class FirestationsController {
     @GetMapping("/firestation/{id}")
     public ResponseEntity<Firestations> getFirestation(@PathVariable("id") final Long id) {
         logger.info("Requête getFirestation avec en paramètre: {}", id);
-        Optional<Firestations> firestation = firestationsService.getFirestation(id);
+        Firestations firestation = firestationsService.getFirestation(id);
         logger.debug("firestationsService.getFirestation() en cours : {}", firestation);
-        return firestation.map(station -> new ResponseEntity<>(station, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            return new ResponseEntity<>(firestation, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement de la requête getFirestation: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -56,9 +63,9 @@ public class FirestationsController {
      * @return - An iterable object of Firestations
      */
     @GetMapping("/firestation")
-    public ResponseEntity<Iterable<Firestations>> getAllFirestations() {
+    public ResponseEntity<ArrayList<Firestations>> getAllFirestations() {
         logger.info("Requête getAllFirestations");
-        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<Firestations> firestations = firestationsService.getFirestations();
         logger.debug("firestationsService.getFirestations() en cours : {}", firestations);
         try {
             logger.info("Réponse réussi pour la requête getAllFirestations: {}", firestations);
@@ -76,7 +83,7 @@ public class FirestationsController {
      * @return
      */
     @PutMapping("/firestation/{id}")
-    public ResponseEntity<Firestations> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) {
+    public ResponseEntity<Firestations> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) throws IOException {
         logger.info("Requête updateFirestation avec en paramètre: {}", id);
         Firestations firestations1 = firestationsService.putFirestation(id, firestation);
         try {
