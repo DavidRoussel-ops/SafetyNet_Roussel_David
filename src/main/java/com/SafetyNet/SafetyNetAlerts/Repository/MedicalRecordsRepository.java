@@ -15,7 +15,6 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
 
     static MedicalRecords medialRecordsJSON() {
         try {
-            MedicalRecordsService medicalRecordsService = new MedicalRecordsService();
             ObjectMapper mapper = new ObjectMapper();
             File file = new File("src/main/resources/data.json");
             JsonNode jsonNode = mapper.readTree(file);
@@ -27,7 +26,7 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
                 medicalRecords.setBirthdate(node.path("birthdate").asText());
                 medicalRecords.setMedications(String.valueOf(node.findValue("medications")));
                 medicalRecords.setAllergies(String.valueOf(node.findValue("allergies")));
-                medicalRecordsService.saveMedicalRecord(medicalRecords);
+                mapper.writeValueAsString(medicalRecords);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
