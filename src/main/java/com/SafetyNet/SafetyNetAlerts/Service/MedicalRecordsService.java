@@ -5,6 +5,8 @@ import com.SafetyNet.SafetyNetAlerts.Repository.MedicalRecordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -17,30 +19,30 @@ public class MedicalRecordsService {
      * @param id
      * @return MedicalRecords
      */
-    public Optional<MedicalRecords> getMedicalRecord(final Long id) {
-        return medicalRecordsRepository.findById(id);
+    public MedicalRecords getMedicalRecord(final Long id) {
+        return medicalRecordsRepository.findMedicalRecordById(id);
     }
 
     /**
      * @return MedicalRecords
      */
-    public Iterable<MedicalRecords> getMedicalRecords() {
-        return medicalRecordsRepository.findAll();
+    public ArrayList<MedicalRecords> getMedicalRecords() {
+        return medicalRecordsRepository.findAllMedicalRecords();
     }
 
     /**
      * @param id
      */
-    public void deleteMedicalRecord(final Long id) {
-        medicalRecordsRepository.deleteById(id);
+    public void deleteMedicalRecord(final Long id) throws IOException {
+        medicalRecordsRepository.deleteMedicalRecord(id);
     }
 
     /**
      * @param medicalRecords
      * @return MedicalRecords
      */
-    public MedicalRecords saveMedicalRecord(MedicalRecords medicalRecords) {
-        return medicalRecordsRepository.save(medicalRecords);
+    public void saveMedicalRecord(MedicalRecords medicalRecords) throws IOException {
+        medicalRecordsRepository.saveMedicalRecord(medicalRecords);
     }
 
     /**
@@ -49,34 +51,7 @@ public class MedicalRecordsService {
      * @param medicalRecord
      * @return currentMedicalRecords
      */
-    public MedicalRecords putMedicalRecord(final Long id, final MedicalRecords medicalRecord) {
-        Optional<MedicalRecords> medicalRecordsOptional = getMedicalRecord(id);
-        if (medicalRecordsOptional.isPresent()) {
-            MedicalRecords currentMedicalRecords = medicalRecordsOptional.get();
-
-            String firstname = medicalRecord.getFirstname();
-            if (firstname != null) {
-                currentMedicalRecords.setFirstname(firstname);
-            }
-            String lastname = medicalRecord.getLastname();
-            if (lastname != null) {
-                currentMedicalRecords.setLastname(lastname);
-            }
-            String birthdate = medicalRecord.getBirthdate();
-            if (birthdate != null) {
-                currentMedicalRecords.setBirthdate(birthdate);
-            }
-            String medications = medicalRecord.getMedications();
-            if (medications != null) {
-                currentMedicalRecords.setMedications(medications);
-            }
-            String allergies = medicalRecord.getAllergies();
-            if (allergies != null) {
-                currentMedicalRecords.setAllergies(allergies);
-            }
-            return saveMedicalRecord(currentMedicalRecords);
-        } else {
-            return null;
-        }
+    public void putMedicalRecord(final MedicalRecords medicalRecord) throws IOException {
+        medicalRecordsRepository.updateMedicalRecord(medicalRecord);
     }
 }
