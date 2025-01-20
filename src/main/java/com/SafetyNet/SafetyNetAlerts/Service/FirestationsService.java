@@ -34,8 +34,8 @@ public class FirestationsService {
     /**
      * @param id
      */
-    public void deleteFirestation(final Long id) {
-        firestationsRepository.deleteById(id);
+    public void deleteFirestation(final Long id) throws IOException {
+        firestationsRepository.deleteFirestation(id);
     }
 
     /**
@@ -52,8 +52,9 @@ public class FirestationsService {
      * @param firestations
      * @return currentFirestation
      */
-    public Firestations putFirestation(final Long id, final Firestations firestations) throws IOException {
-        Firestations firestationsOptional = getFirestation(id);
+    public void putFirestation(final Firestations firestations) throws IOException {
+        firestationsRepository.updateFirestation(firestations);
+        /*Firestations firestationsOptional = getFirestation(id);
         if (Objects.equals(id, firestationsOptional.getId())) {
             Firestations currentFirestation = firestationsOptional;
 
@@ -70,6 +71,6 @@ public class FirestationsService {
             return currentFirestation;
         } else {
             return null;
-        }
+        }*/
     }
 }
