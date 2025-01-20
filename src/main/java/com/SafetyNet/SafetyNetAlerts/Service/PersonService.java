@@ -5,6 +5,8 @@ import com.SafetyNet.SafetyNetAlerts.Repository.PersonsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -18,30 +20,30 @@ public class PersonService {
      * @param id
      * @return Persons
      */
-    public Optional<Persons> getPerson(final Long id) {
-        return personsRepository.findById(id);
+    public Persons getPerson(final Long id) {
+        return personsRepository.findPersonById(id);
     }
 
     /**
      * @return Persons
      */
-    public Iterable<Persons> getPersons() {
-        return personsRepository.findAll();
+    public ArrayList<Persons> getPersons() {
+        return personsRepository.findAllPersons();
     }
 
     /**
      * @param id
      */
-    public void deletePerson(final Long id) {
-        personsRepository.deleteById(id);
+    public void deletePerson(final Long id) throws IOException {
+        personsRepository.deletePerson(id);
     }
 
     /**
      * @param persons
      * @return Persons
      */
-    public Persons savePerson(Persons persons) {
-        return personsRepository.save(persons);
+    public void savePerson(Persons persons) throws IOException {
+        personsRepository.savePerson(persons);
     }
 
     /**
@@ -50,8 +52,9 @@ public class PersonService {
      * @param persons
      * @return currentPersons
      */
-    public Persons putPerson(final Long id, final Persons persons) {
-        Optional<Persons> personsOptional = getPerson(id);
+    public void putPerson(final Persons persons) throws IOException {
+        personsRepository.updatePerson(persons);
+        /*Optional<Persons> personsOptional = getPerson(id);
         if (personsOptional.isPresent()) {
             Persons currentPersons = personsOptional.get();
 
@@ -86,6 +89,6 @@ public class PersonService {
             return savePerson(currentPersons);
         } else {
             return null;
-        }
+        }*/
     }
 }
