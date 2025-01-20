@@ -83,11 +83,12 @@ public class FirestationsController {
      * @return
      */
     @PutMapping("/firestation/{id}")
-    public ResponseEntity<Firestations> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) throws IOException {
+    public ResponseEntity<HttpStatus> updateFirestation(@PathVariable("id") final Long id, @RequestBody Firestations firestation) throws IOException {
         logger.info("Requête updateFirestation avec en paramètre: {}", id);
-        Firestations firestations1 = firestationsService.putFirestation(id, firestation);
+        firestation.setId(id);
+        firestationsService.putFirestation(firestation);
         try {
-            return new ResponseEntity<>(firestations1, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête updateFirestation: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
