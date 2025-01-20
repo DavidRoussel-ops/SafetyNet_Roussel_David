@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -27,13 +28,12 @@ public class PersonsController {
      * @return the persons object saved
      */
     @PostMapping("/person")
-    public ResponseEntity<Persons> createPersons(@RequestBody Persons persons) {
+    public ResponseEntity<HttpStatus> createPersons(@RequestBody Persons persons) throws IOException {
         logger.info("Requête createPersons avec en paramètre: {}", persons);
-        Persons persons1 = personService.savePerson(persons);
-        logger.debug("personService.savePerson() en cours : {}", persons1);
+        personService.savePerson(persons);
         try {
-            logger.info("Réponse réussi pour la requête createPersons: {}", persons1);
-            return new ResponseEntity<>(persons1, HttpStatus.CREATED);
+            logger.info("Réponse réussi pour la requête createPersons: {}", HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête createPersons: {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,9 +49,14 @@ public class PersonsController {
     @GetMapping("/person/{id}")
     public ResponseEntity<Persons> getPerson(@PathVariable("id") final Long id) {
         logger.info("Requête getPerson avec en paramètre: {}", id);
-        Optional<Persons> persons = personService.getPerson(id);
+        Persons persons = personService.getPerson(id);
         logger.debug("personService.getPerson() en cours : {}", persons);
-        return persons.map(person -> new ResponseEntity<>(person, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try {
+            return new ResponseEntity<>(persons, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Erreur lors du traitement de la requête getPerson: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -60,9 +65,9 @@ public class PersonsController {
      * @return - An Iterable object of person
      */
     @GetMapping("/person")
-    public ResponseEntity<Iterable<Persons>> getAllPersons() {
+    public ResponseEntity<ArrayList<Persons>> getAllPersons() {
         logger.info("Requête getAllPersons");
-        Iterable<Persons> persons = personService.getPersons();
+        ArrayList<Persons> persons = personService.getPersons();
         logger.debug("personService.getPersons() en cours : {}", persons);
         try {
             logger.info("Réponse réussi pour la requête getAllPersons: {}", persons);
@@ -81,11 +86,12 @@ public class PersonsController {
      * @return
      */
     @PutMapping("/person/{id}")
-    public ResponseEntity<Persons> updatePerson(@PathVariable("id") final Long id, @RequestBody Persons persons) {
+    public ResponseEntity<HttpStatus> updatePerson(@PathVariable("id") final Long id, @RequestBody Persons persons) throws IOException {
         logger.info("Requête updatePerson avec en paramètre: {}", id);
-        Persons persons1 = personService.putPerson(id, persons);
+        persons.setId(id);
+        personService.putPerson(persons);
         try {
-            return new ResponseEntity<>(persons1, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête updatePerson: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
