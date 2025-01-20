@@ -89,19 +89,19 @@ public class ModelDTOController {
                 if (Objects.equals(address, persons1.getAddress())) {
                     for (MedicalRecords medicalRecords1 : medicalRecords) {
                         logger.debug("Boucle de medicalRecords1 en cours : {}", medicalRecords1);
-                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                        if (Objects.equals(persons1.getFirstName(), medicalRecords1.getFirstName())) {
                             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                             Date birthdate = format.parse(medicalRecords1.getBirthdate());
                             int isChild = getYears(birthdate);
                             if (isChild > 18) {
                                 OtherPeopleDTO otherPeopleDTO = new OtherPeopleDTO();
-                                otherPeopleDTO.setFirstname(persons1.getFirstname());
-                                otherPeopleDTO.setLastname(persons1.getLastname());
+                                otherPeopleDTO.setFirstname(persons1.getFirstName());
+                                otherPeopleDTO.setLastname(persons1.getLastName());
                                 arrayList.add(otherPeopleDTO);
                             } else {
                                 ChildAlertDTO childAlertDTO = new ChildAlertDTO();
-                                childAlertDTO.setLastname(persons1.getLastname());
-                                childAlertDTO.setFirstname(persons1.getFirstname());
+                                childAlertDTO.setLastname(persons1.getLastName());
+                                childAlertDTO.setFirstname(persons1.getFirstName());
                                 childAlertDTO.setAge(getYears(birthdate));
                                 childAlertDTO.setOthePeople(arrayList);
                                 childAlertDTOS.add(childAlertDTO);
@@ -169,11 +169,11 @@ public class ModelDTOController {
                 logger.debug("Boucle de persons1 en cours : {}", persons1);
                 if (Objects.equals(address, persons1.getAddress())) {
                     FireAddressDTO fireAddressDTO = new FireAddressDTO();
-                    fireAddressDTO.setLastname(persons1.getLastname());
+                    fireAddressDTO.setLastname(persons1.getLastName());
                     fireAddressDTO.setPhone(persons1.getPhone());
                     for (MedicalRecords medicalRecords1 : medicalRecords) {
                         logger.debug("Boucle de medicalRecords1 en cours : {}", medicalRecords1);
-                        if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                        if (Objects.equals(persons1.getFirstName(), medicalRecords1.getFirstName())) {
                             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                             Date birthdate = format.parse(medicalRecords1.getBirthdate());
                             fireAddressDTO.setAge(getYears(birthdate));
@@ -224,10 +224,10 @@ public class ModelDTOController {
                         if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
                             for (MedicalRecords medicalRecords1 : medicalRecords) {
                                 logger.debug("Boucle de medicalRecords1 en cours : {}", medicalRecords1);
-                                if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                                if (Objects.equals(persons1.getFirstName(), medicalRecords1.getFirstName())) {
                                     InfoPersonsZoneDTO infoPersonsZoneDTO = new InfoPersonsZoneDTO();
-                                    infoPersonsZoneDTO.setFirstname(persons1.getFirstname());
-                                    infoPersonsZoneDTO.setLastname(persons1.getLastname());
+                                    infoPersonsZoneDTO.setFirstname(persons1.getFirstName());
+                                    infoPersonsZoneDTO.setLastname(persons1.getLastName());
                                     infoPersonsZoneDTO.setPhone(persons1.getPhone());
                                     infoPersonsZoneDTO.setAddress(persons1.getAddress());
                                     infoPersonsZoneDTOS.add(infoPersonsZoneDTO);
@@ -278,11 +278,11 @@ public class ModelDTOController {
                         logger.debug("Boucle de persons1 en cours : {}", persons1);
                         if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
                             ListStationDTO listStationDTO = new ListStationDTO();
-                            listStationDTO.setLastname(persons1.getLastname());
+                            listStationDTO.setLastname(persons1.getLastName());
                             listStationDTO.setPhone(persons1.getPhone());
                             for (MedicalRecords medicalRecords1 : medicalRecords) {
                                 logger.debug("Boucle de medicalRecords1 en cours : {}", medicalRecords1);
-                                if (Objects.equals(persons1.getFirstname(), medicalRecords1.getFirstname())) {
+                                if (Objects.equals(persons1.getFirstName(), medicalRecords1.getFirstName())) {
                                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                                     Date birthdate = format.parse(medicalRecords1.getBirthdate());
                                     listStationDTO.setAge(getYears(birthdate));
@@ -319,14 +319,14 @@ public class ModelDTOController {
             logger.info("Requête getPersonsByLastname avec en paramètre: {}", lastname);
             for (Persons persons1 : persons) {
                 logger.debug("Boucle de persons1 en cours : {}", persons1);
-                if (Objects.equals(lastname, persons1.getLastname())) {
+                if (Objects.equals(lastname, persons1.getLastName())) {
                     InfolastNameDTO infolastNameDTO = new InfolastNameDTO();
-                    infolastNameDTO.setLastname(persons1.getLastname());
+                    infolastNameDTO.setLastname(persons1.getLastName());
                     infolastNameDTO.setEmail(persons1.getEmail());
                     infolastNameDTO.setAddress(persons1.getAddress());
                     for (MedicalRecords medicalRecords1 : medicalRecords) {
                         logger.debug("Boucle de medicalRecords1 en cours : {}", medicalRecords1);
-                        if (Objects.equals(medicalRecords1.getFirstname(), persons1.getFirstname())) {
+                        if (Objects.equals(medicalRecords1.getFirstName(), persons1.getFirstName())) {
                             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                             Date birthdate = format.parse(medicalRecords1.getBirthdate());
                             infolastNameDTO.setAge(getYears(birthdate));
