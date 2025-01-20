@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -26,13 +28,13 @@ public class MedicalRecordsController {
      * @return the medicalRecords object saved
      */
     @PostMapping("/medicalRecord")
-    public ResponseEntity<MedicalRecords> createMedicalRecord(@RequestBody MedicalRecords medicalRecords) {
+    public ResponseEntity<HttpStatus> createMedicalRecord(@RequestBody MedicalRecords medicalRecords) throws IOException {
         logger.info("Requête createMedicalRecord avec en paramètre: {}", medicalRecords);
-        MedicalRecords medicalRecords1 = medicalRecordsService.saveMedicalRecord(medicalRecords);
-        logger.debug("medicalRecordsService.saveMedicalRecord() en cours : {}", medicalRecords1);
+        medicalRecordsService.saveMedicalRecord(medicalRecords);
+        logger.debug("medicalRecordsService.saveMedicalRecord() en cours : {}", HttpStatus.CREATED);
         try {
             logger.info("Réponse réussi pour lla requête createMedicalRecord : {}", medicalRecords);
-            return new ResponseEntity<>(medicalRecords1, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête createMedicalRecord : {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,11 +50,11 @@ public class MedicalRecordsController {
     @GetMapping("/medicalRecord/{id}")
     public ResponseEntity<MedicalRecords> getMedicalRecord(@PathVariable("id") final Long id) {
         logger.info("Requête getMedicalRecord avec en paramètre: {}", id);
-        Optional<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecord(id);
+        MedicalRecords medicalRecords = medicalRecordsService.getMedicalRecord(id);
         logger.debug("medicalRecordsService.getMedicalRecord() en cours : {}", medicalRecords);
         try {
             logger.info("Réponse réussi pour la requête getMedicalRecord : {}", medicalRecords);
-            return medicalRecords.map(records -> new ResponseEntity<>(records, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête getMedicalRecord : {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,9 +67,9 @@ public class MedicalRecordsController {
      * @return - An iterable object of firestation
      */
     @GetMapping("/medicalRecord")
-    public ResponseEntity<Iterable<MedicalRecords>> getAllMedicalRecords() {
+    public ResponseEntity<ArrayList<MedicalRecords>> getAllMedicalRecords() {
         logger.info("Requête getAllMMedicalRecords");
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         logger.debug("medicalRecordsService.getMedicalRecords() en cours : {}", medicalRecords);
         try {
             logger.info("Réponse réussi pour la requête getAllMedicalRecords: {}", medicalRecords);
@@ -86,11 +88,12 @@ public class MedicalRecordsController {
      * @return currentMedicalRecords
      */
     @PutMapping("/medicalRecord/{id}")
-    public ResponseEntity<MedicalRecords> updateMedicalRecord(@PathVariable("id") final Long id, @RequestBody MedicalRecords medicalRecord) {
+    public ResponseEntity<MedicalRecords> updateMedicalRecord(@PathVariable("id") final Long id, @RequestBody MedicalRecords medicalRecord) throws IOException {
         logger.info("Requête updateMedicalRecord avec en paramêtre: {}", id);
-        MedicalRecords medicalRecords1 = medicalRecordsService.putMedicalRecord(id, medicalRecord);
+        medicalRecord.setId(id);
+        medicalRecordsService.putMedicalRecord(medicalRecord);
         try {
-            return new ResponseEntity<>(medicalRecords1, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête updateMedicalRecord: {]", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
