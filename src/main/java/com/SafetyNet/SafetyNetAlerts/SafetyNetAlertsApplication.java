@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SafetyNetAlertsApplication implements CommandLineRunner {
 
+	@Autowired
+	BusinessService businessService;
+
 	/**
 	 * @param args
 	 */
@@ -25,6 +28,7 @@ public class SafetyNetAlertsApplication implements CommandLineRunner {
 	 */
 	public void run(String... args) throws Exception {
 		System.out.println("L'application est lancer");
+		businessService.createJsonBdd();
 	}
 
 }
