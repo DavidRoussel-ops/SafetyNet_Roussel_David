@@ -3,6 +3,7 @@ package com.SafetyNet.SafetyNetAlerts.Repository;
 import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -10,11 +11,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords, Long> {
@@ -28,14 +27,16 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
             JsonNode jsonNode = mapper.readTree(file);
             JsonNode medicalRecordsNode = jsonNode.path("medicalrecords");
             for (JsonNode node : medicalRecordsNode) {
-                String arrayMedication = node.path("medications").asText();
+                JsonNode arrayMed = node.path("medications");
+                JsonNode arrayAl = node.path("allergies");
+                TypeReference<String[]> typeReferenceString = new TypeReference<String[]>() {};
                 MedicalRecords medicalRecords = new MedicalRecords();
                 medicalRecords.setId(id);
                 medicalRecords.setFirstName(node.path("firstName").asText());
                 medicalRecords.setLastName(node.path("lastName").asText());
                 medicalRecords.setBirthdate(node.path("birthdate").asText());
-                medicalRecords.setMedications(arrayMedication);
-                medicalRecords.setAllergies(String.valueOf(node.path("allergies").withArrayProperty("allergies")));
+                medicalRecords.setMedications(mapper.convertValue(arrayMed, typeReferenceString));
+                medicalRecords.setAllergies(mapper.convertValue(arrayAl, typeReferenceString));
                 medicalRecordsArrayList.add(medicalRecords);
                 id ++;
             }
@@ -78,7 +79,8 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, ArrayList<MedicalRecords>> map = new HashMap<>();
+        JsonNode meddicalRecordsNode = jsonNode.path("medicalrecords");
+        Map<JsonNode, ArrayList<MedicalRecords>> map = new HashMap<>();
         System.out.println(jsonNode);
         ArrayList<MedicalRecords> medicalRecordsArrayList = findAllMedicalRecords();
         MedicalRecords lastMedicalRecords = medicalRecordsArrayList.get(medicalRecordsArrayList.size() - 1);
@@ -92,7 +94,7 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         medicalRecordToSave.setMedications(medicalRecords.getMedications());
         medicalRecordToSave.setAllergies(medicalRecords.getAllergies());
         medicalRecordsArrayList.add(medicalRecordToSave);
-        map.put("medicalrecords", medicalRecordsArrayList);
+        map.put(meddicalRecordsNode, medicalRecordsArrayList);
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
     }
 
