@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,8 +174,8 @@ public class ModelDTOController {
                             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                             Date birthdate = format.parse(medicalRecords1.getBirthdate());
                             fireAddressDTO.setAge(getYears(birthdate));
-                            fireAddressDTO.setMedications(medicalRecords1.getMedications());
-                            fireAddressDTO.setAllergies(medicalRecords1.getAllergies());
+                            fireAddressDTO.setMedications(Arrays.toString(medicalRecords1.getMedications()));
+                            fireAddressDTO.setAllergies(Arrays.toString(medicalRecords1.getAllergies()));
                             for (Firestations firestations1 : firestations) {
                                 logger.debug("Boucle de firestations1 en cours : {}", firestations1);
                                 if (Objects.equals(firestations1.getAddress(), persons1.getAddress())) {
@@ -286,8 +283,8 @@ public class ModelDTOController {
                                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                                     Date birthdate = format.parse(medicalRecords1.getBirthdate());
                                     listStationDTO.setAge(getYears(birthdate));
-                                    listStationDTO.setMedications(medicalRecords1.getMedications());
-                                    listStationDTO.setAllergies(medicalRecords1.getAllergies());
+                                    listStationDTO.setMedications(Arrays.toString(medicalRecords1.getMedications()));
+                                    listStationDTO.setAllergies(Arrays.toString(medicalRecords1.getAllergies()));
                                     listStationDTOS.add(listStationDTO);
                                 }
                             }
@@ -330,8 +327,8 @@ public class ModelDTOController {
                             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                             Date birthdate = format.parse(medicalRecords1.getBirthdate());
                             infolastNameDTO.setAge(getYears(birthdate));
-                            infolastNameDTO.setMedications(medicalRecords1.getMedications());
-                            infolastNameDTO.setAllergies(medicalRecords1.getAllergies());
+                            infolastNameDTO.setMedications(Arrays.toString(medicalRecords1.getMedications()));
+                            infolastNameDTO.setAllergies(Arrays.toString(medicalRecords1.getAllergies()));
                             infoPerson.add(infolastNameDTO);
                         }
                     }
