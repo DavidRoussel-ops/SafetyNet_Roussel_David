@@ -1,27 +1,15 @@
 package com.SafetyNet.SafetyNetAlerts.Repository;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.core.Base64Variant;
-import com.fasterxml.jackson.core.JsonLocation;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonStreamContext;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -53,36 +41,33 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, ArrayList<Firestations>> map = new HashMap<>();
         ArrayList<Firestations> firestationsArrayList = findAllFirestations();
         for (Firestations firestations1 : firestationsArrayList) {
             if (Objects.equals(firestations1.getId(), firestations.getId())) {
                 firestations1.setAddress(firestations.getAddress());
                 firestations1.setStation(firestations.getStation());
+                JsonNode nodeMedicalRecord = mapper.valueToTree(firestationsArrayList);
+                ObjectNode addNode = ((ObjectNode) jsonNode).set("firestations", nodeMedicalRecord);
+                mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
             }
         }
-        map.put("firestations", firestationsArrayList);
-        mapper.writeValue(file, map);
     }
 
     default void deleteFirestation(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
-        Map<String, ArrayList<Firestations>> map = new HashMap<>();
+        JsonNode jsonNode = mapper.readTree(file);
         ArrayList<Firestations> firestationsArrayList = findAllFirestations();
         firestationsArrayList.removeIf(firestations1 -> Objects.equals(firestations1.getId(), id));
-        map.put("firestations", firestationsArrayList);
-        mapper.writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(firestationsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("firestations", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default void saveFirestation(Firestations firestations) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, Map<String, ArrayList<Firestations>>> baseMap = new HashMap<>();
-        Map<String, ArrayList<Firestations>> map = new HashMap<>();
-        JsonNode FirestationsNode = jsonNode.get("firestations");
-        System.out.println(jsonNode);
         ArrayList<Firestations> firestationsArrayList = findAllFirestations();
         Firestations lastFirestation = firestationsArrayList.get(firestationsArrayList.size() - 1);
         Long lastId = lastFirestation.getId();
@@ -92,8 +77,9 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         firestationToSave.setStation(firestations.getStation());
         firestationToSave.setAddress(firestations.getAddress());
         firestationsArrayList.add(firestationToSave);
-        map.put("firestations", firestationsArrayList);
-        mapper.writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(firestationsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("firestations", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default Firestations findFirestationById(final Long id) {
