@@ -1,25 +1,19 @@
 package com.SafetyNet.SafetyNetAlerts.Repository;
 
-import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @Repository
 public interface PersonsRepository extends CrudRepository<Persons, Long> {
-
 
     default ArrayList<Persons> findAllPersons() {
         try {
@@ -52,7 +46,6 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, ArrayList<Persons>> map = new HashMap<>();
         ArrayList<Persons> personsArrayList = findAllPersons();
         for (Persons persons1 : personsArrayList) {
             if (Objects.equals(persons1.getId(), persons.getId())) {
@@ -63,28 +56,28 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
                 persons1.setZip(persons.getZip());
                 persons1.setPhone(persons.getPhone());
                 persons1.setEmail(persons.getEmail());
+                JsonNode nodeMedicalRecord = mapper.valueToTree(personsArrayList);
+                ObjectNode addNode = ((ObjectNode) jsonNode).set("persons", nodeMedicalRecord);
+                mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
             }
         }
-        map.put("persons", personsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
     }
 
     default void deletePerson(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
-        Map<String, ArrayList<Persons>> map = new HashMap<>();
+        JsonNode jsonNode = mapper.readTree(file);
         ArrayList<Persons> personsArrayList = findAllPersons();
         personsArrayList.removeIf(persons1 -> Objects.equals(persons1.getId(), id));
-        map.put("persons", personsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(personsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("persons", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default void savePerson(Persons persons) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, ArrayList<Persons>> map = new HashMap<>();
-        System.out.println(jsonNode);
         ArrayList<Persons> personsArrayList = findAllPersons();
         Persons lastPerson = personsArrayList.get(personsArrayList.size() - 1);
         Long lastId = lastPerson.getId();
@@ -99,8 +92,9 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         personToSave.setPhone(persons.getPhone());
         personToSave.setEmail(persons.getEmail());
         personsArrayList.add(personToSave);
-        map.put("persons", personsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(personsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("persons", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default Persons findPersonById(final Long id) {
