@@ -1,17 +1,14 @@
 package com.SafetyNet.SafetyNetAlerts.Repository;
 
 import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
-import com.SafetyNet.SafetyNetAlerts.Model.Persons;
-import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -50,7 +47,6 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        Map<String, ArrayList<MedicalRecords>> map = new HashMap<>();
         ArrayList<MedicalRecords> medicalRecordsArrayList = findAllMedicalRecords();
         for (MedicalRecords medicalRecords1 : medicalRecordsArrayList) {
             if (Objects.equals(medicalRecords1.getId(), medicalRecords.getId())) {
@@ -59,29 +55,28 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
                 medicalRecords1.setBirthdate(medicalRecords.getBirthdate());
                 medicalRecords1.setMedications(medicalRecords.getMedications());
                 medicalRecords1.setAllergies(medicalRecords.getAllergies());
+                JsonNode nodeMedicalRecord = mapper.valueToTree(medicalRecordsArrayList);
+                ObjectNode addNode = ((ObjectNode) jsonNode).set("medicalrecords", nodeMedicalRecord);
+                mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
             }
         }
-        map.put("medicalrecords", medicalRecordsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
     }
 
     default void deleteMedicalRecord(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
-        Map<String, ArrayList<MedicalRecords>> map = new HashMap<>();
+        JsonNode jsonNode = mapper.readTree(file);
         ArrayList<MedicalRecords> medicalRecordsArrayList = findAllMedicalRecords();
         medicalRecordsArrayList.removeIf(medicalRecords1 -> Objects.equals(medicalRecords1.getId(), id));
-        map.put("medicalrecords", medicalRecordsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(medicalRecordsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("medicalrecords", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default void saveMedicalRecord(MedicalRecords medicalRecords) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
         JsonNode jsonNode = mapper.readTree(file);
-        JsonNode meddicalRecordsNode = jsonNode.path("medicalrecords");
-        Map<JsonNode, ArrayList<MedicalRecords>> map = new HashMap<>();
-        System.out.println(jsonNode);
         ArrayList<MedicalRecords> medicalRecordsArrayList = findAllMedicalRecords();
         MedicalRecords lastMedicalRecords = medicalRecordsArrayList.get(medicalRecordsArrayList.size() - 1);
         Long lastId = lastMedicalRecords.getId();
@@ -94,8 +89,9 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         medicalRecordToSave.setMedications(medicalRecords.getMedications());
         medicalRecordToSave.setAllergies(medicalRecords.getAllergies());
         medicalRecordsArrayList.add(medicalRecordToSave);
-        map.put(meddicalRecordsNode, medicalRecordsArrayList);
-        mapper.writerWithDefaultPrettyPrinter().writeValue(file, map);
+        JsonNode nodeMedicalRecord = mapper.valueToTree(medicalRecordsArrayList);
+        ObjectNode addNode = ((ObjectNode) jsonNode).set("medicalrecords", nodeMedicalRecord);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
     default MedicalRecords findMedicalRecordById(final Long id) {
