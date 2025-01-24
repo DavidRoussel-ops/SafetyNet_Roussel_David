@@ -28,9 +28,6 @@ public class ModelDTOControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BusinessService businessService;
-
-    @MockBean
     private MedicalRecordsService medicalRecordsService;
 
     @MockBean
@@ -44,8 +41,8 @@ public class ModelDTOControllerTest {
         String city = "Culver";
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Paul");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Paul");
+        persons1.setLastName("Boyd");
         persons1.setAddress("1509 Culver St");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -53,8 +50,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("pierre@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("1509 Culver St");
         persons2.setCity("Culver");
         persons2.setZip("97451");
@@ -62,14 +59,14 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Michel");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Michel");
+        persons3.setLastName("Boyd");
         persons3.setAddress("1509 Culver St");
         persons3.setCity("Culver");
         persons3.setZip("97451");
         persons3.setPhone("841-874-6512");
         persons3.setEmail("michel@email.com");
-        Iterable<Persons> persons = new ArrayList<>(
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -83,8 +80,8 @@ public class ModelDTOControllerTest {
         String city = "Paris";
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Paul");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Paul");
+        persons1.setLastName("Boyd");
         persons1.setAddress("1509 Culver St");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -92,14 +89,14 @@ public class ModelDTOControllerTest {
         persons1.setEmail("jaboy@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("1509 Culver St");
         persons2.setCity("Culver");
         persons2.setZip("97451");
         persons2.setPhone("841-874-6512");
         persons2.setEmail("paul@email.com");
-        Iterable<Persons> persons = new ArrayList<>(
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -125,8 +122,8 @@ public class ModelDTOControllerTest {
         firestations3.setStation("3");
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Michel");
+        persons1.setLastName("Boyd");
         persons1.setAddress("15 rue de la gloire");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -134,8 +131,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -143,17 +140,17 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Jacques");
+        persons3.setLastName("Boyd");
         persons3.setAddress("10 rue de la gloire");
         persons3.setCity("Culver");
         persons3.setZip("97451");
         persons3.setPhone("841-874-4596");
         persons3.setEmail("jacques@email.com");
-        Iterable<Persons> persons = new ArrayList<>(
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<Firestations> firestations = new ArrayList<>(
+        ArrayList<Firestations> firestations = new ArrayList<>(
                 Arrays.asList(firestations1, firestations2, firestations3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -165,11 +162,17 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetChildAlert() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayMedical2 = new String[]{"Paracetamol : 500mg"};
+        String[] arrayMedical3 = new String[]{"Codéine : 1500mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
+        String[] arrayAllergies2 = new String[]{"Codéine"};
+        String[] arrayAllergies3 = new String[]{"Paracetamol"};
         String address = "10 rue de la gloire";
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Michel");
+        persons1.setLastName("Boyd");
         persons1.setAddress("15 rue de la gloire");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -177,8 +180,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -186,8 +189,8 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Jacques");
+        persons3.setLastName("Boyd");
         persons3.setAddress("10 rue de la gloire");
         persons3.setCity("Culver");
         persons3.setZip("97451");
@@ -195,29 +198,29 @@ public class ModelDTOControllerTest {
         persons3.setEmail("jacques@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname("Boyd");
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName("Boyd");
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
         MedicalRecords medicalRecords2 = new MedicalRecords();
         medicalRecords2.setId(2L);
-        medicalRecords2.setFirstname("Paul");
-        medicalRecords2.setLastname("Boyd");
+        medicalRecords2.setFirstName("Paul");
+        medicalRecords2.setLastName("Boyd");
         medicalRecords2.setBirthdate("01/01/1985");
-        medicalRecords2.setMedications("Paracetamol : 500mg");
-        medicalRecords2.setAllergies("Codéine");
+        medicalRecords2.setMedications(arrayMedical2);
+        medicalRecords2.setAllergies(arrayAllergies2);
         MedicalRecords medicalRecords3 = new MedicalRecords();
         medicalRecords3.setId(3L);
-        medicalRecords3.setFirstname("Jacques");
-        medicalRecords3.setLastname("Boyd");
+        medicalRecords3.setFirstName("Jacques");
+        medicalRecords3.setLastName("Boyd");
         medicalRecords3.setBirthdate("01/01/2014");
-        medicalRecords3.setMedications("Codéine : 1500mg");
-        medicalRecords3.setAllergies("Paracetamol");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords3.setMedications(arrayMedical3);
+        medicalRecords3.setAllergies(arrayAllergies3);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1, medicalRecords2, medicalRecords3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -229,6 +232,12 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetAddress() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayMedical2 = new String[]{"Paracetamol : 500mg"};
+        String[] arrayMedical3 = new String[]{"Codéine : 1500mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
+        String[] arrayAllergies2 = new String[]{"Codéine"};
+        String[] arrayAllergies3 = new String[]{"Paracetamol"};
         String address = "15 rue de la gloire";
         Firestations firestations1 = new Firestations();
         firestations1.setId(1L);
@@ -244,8 +253,8 @@ public class ModelDTOControllerTest {
         firestations3.setStation("3");
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Michel");
+        persons1.setLastName("Boyd");
         persons1.setAddress("15 rue de la gloire");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -253,8 +262,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -262,8 +271,8 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Jacques");
+        persons3.setLastName("Boyd");
         persons3.setAddress("10 rue de la gloire");
         persons3.setCity("Culver");
         persons3.setZip("97451");
@@ -271,32 +280,32 @@ public class ModelDTOControllerTest {
         persons3.setEmail("jacques@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname("Boyd");
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName("Boyd");
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
         MedicalRecords medicalRecords2 = new MedicalRecords();
         medicalRecords2.setId(2L);
-        medicalRecords2.setFirstname("Paul");
-        medicalRecords2.setLastname("Boyd");
+        medicalRecords2.setFirstName("Paul");
+        medicalRecords2.setLastName("Boyd");
         medicalRecords2.setBirthdate("01/01/1985");
-        medicalRecords2.setMedications("Paracetamol : 500mg");
-        medicalRecords2.setAllergies("Codéine");
+        medicalRecords2.setMedications(arrayMedical2);
+        medicalRecords2.setAllergies(arrayAllergies2);
         MedicalRecords medicalRecords3 = new MedicalRecords();
         medicalRecords3.setId(3L);
-        medicalRecords3.setFirstname("Jacques");
-        medicalRecords3.setLastname("Boyd");
+        medicalRecords3.setFirstName("Jacques");
+        medicalRecords3.setLastName("Boyd");
         medicalRecords3.setBirthdate("01/01/1999");
-        medicalRecords3.setMedications("Codéine : 1500mg");
-        medicalRecords3.setAllergies("Paracetamol");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords3.setMedications(arrayMedical3);
+        medicalRecords3.setAllergies(arrayAllergies3);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1, medicalRecords2, medicalRecords3)
         );
-        Iterable<Firestations> firestations = new ArrayList<>(
+        ArrayList<Firestations> firestations = new ArrayList<>(
                 Arrays.asList(firestations1, firestations2, firestations3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -309,6 +318,12 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetPersonsByZone() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayMedical2 = new String[]{"Paracetamol : 500mg"};
+        String[] arrayMedical3 = new String[]{"Codéine : 1500mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
+        String[] arrayAllergies2 = new String[]{"Codéine"};
+        String[] arrayAllergies3 = new String[]{"Paracetamol"};
         String station_number = "1";
         Firestations firestations1 = new Firestations();
         firestations1.setId(1L);
@@ -324,8 +339,8 @@ public class ModelDTOControllerTest {
         firestations3.setStation("3");
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Michel");
+        persons1.setLastName("Boyd");
         persons1.setAddress("15 rue de la gloire");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -333,8 +348,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -342,8 +357,8 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Jacques");
+        persons3.setLastName("Boyd");
         persons3.setAddress("10 rue de la gloire");
         persons3.setCity("Culver");
         persons3.setZip("97451");
@@ -351,32 +366,32 @@ public class ModelDTOControllerTest {
         persons3.setEmail("jacques@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname("Boyd");
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName("Boyd");
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
         MedicalRecords medicalRecords2 = new MedicalRecords();
         medicalRecords2.setId(2L);
-        medicalRecords2.setFirstname("Paul");
-        medicalRecords2.setLastname("Boyd");
+        medicalRecords2.setFirstName("Paul");
+        medicalRecords2.setLastName("Boyd");
         medicalRecords2.setBirthdate("01/01/1985");
-        medicalRecords2.setMedications("Paracetamol : 500mg");
-        medicalRecords2.setAllergies("Codéine");
+        medicalRecords2.setMedications(arrayMedical2);
+        medicalRecords2.setAllergies(arrayAllergies2);
         MedicalRecords medicalRecords3 = new MedicalRecords();
         medicalRecords3.setId(3L);
-        medicalRecords3.setFirstname("Jacques");
-        medicalRecords3.setLastname("Boyd");
+        medicalRecords3.setFirstName("Jacques");
+        medicalRecords3.setLastName("Boyd");
         medicalRecords3.setBirthdate("01/01/2010");
-        medicalRecords3.setMedications("Codéine : 1500mg");
-        medicalRecords3.setAllergies("Paracetamol");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords3.setMedications(arrayMedical3);
+        medicalRecords3.setAllergies(arrayAllergies3);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1, medicalRecords2, medicalRecords3)
         );
-        Iterable<Firestations> firestations = new ArrayList<>(
+        ArrayList<Firestations> firestations = new ArrayList<>(
                 Arrays.asList(firestations1, firestations2, firestations3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -389,6 +404,12 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetHomeByStation() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayMedical2 = new String[]{"Paracetamol : 500mg"};
+        String[] arrayMedical3 = new String[]{"Codéine : 1500mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
+        String[] arrayAllergies2 = new String[]{"Codéine"};
+        String[] arrayAllergies3 = new String[]{"Paracetamol"};
         String stations = "1";
         Firestations firestations1 = new Firestations();
         firestations1.setId(1L);
@@ -404,8 +425,8 @@ public class ModelDTOControllerTest {
         firestations3.setStation("3");
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Michel");
+        persons1.setLastName("Boyd");
         persons1.setAddress("15 rue de la gloire");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -413,8 +434,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -422,8 +443,8 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname("Boyd");
+        persons3.setFirstName("Jacques");
+        persons3.setLastName("Boyd");
         persons3.setAddress("10 rue de la gloire");
         persons3.setCity("Culver");
         persons3.setZip("97451");
@@ -431,32 +452,32 @@ public class ModelDTOControllerTest {
         persons3.setEmail("jacques@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname("Boyd");
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName("Boyd");
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
         MedicalRecords medicalRecords2 = new MedicalRecords();
         medicalRecords2.setId(2L);
-        medicalRecords2.setFirstname("Paul");
-        medicalRecords2.setLastname("Boyd");
+        medicalRecords2.setFirstName("Paul");
+        medicalRecords2.setLastName("Boyd");
         medicalRecords2.setBirthdate("01/01/1985");
-        medicalRecords2.setMedications("Paracetamol : 500mg");
-        medicalRecords2.setAllergies("Codéine");
+        medicalRecords2.setMedications(arrayMedical2);
+        medicalRecords2.setAllergies(arrayAllergies2);
         MedicalRecords medicalRecords3 = new MedicalRecords();
         medicalRecords3.setId(3L);
-        medicalRecords3.setFirstname("Jacques");
-        medicalRecords3.setLastname("Boyd");
+        medicalRecords3.setFirstName("Jacques");
+        medicalRecords3.setLastName("Boyd");
         medicalRecords3.setBirthdate("01/01/1999");
-        medicalRecords3.setMedications("Codéine : 1500mg");
-        medicalRecords3.setAllergies("Paracetamol");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords3.setMedications(arrayMedical3);
+        medicalRecords3.setAllergies(arrayAllergies3);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1, medicalRecords2, medicalRecords3)
         );
-        Iterable<Firestations> firestations = new ArrayList<>(
+        ArrayList<Firestations> firestations = new ArrayList<>(
                 Arrays.asList(firestations1, firestations2, firestations3)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -470,11 +491,13 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetPersonsByLastnameFindOne() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
         String lastname = "Boyd";
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname(lastname);
+        persons1.setFirstName("Michel");
+        persons1.setLastName(lastname);
         persons1.setAddress("1509 Culver St");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -482,15 +505,15 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname(lastname);
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName(lastname);
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -502,11 +525,17 @@ public class ModelDTOControllerTest {
 
     @Test
     public void testGetPersonsByLastnameFindAll() throws Exception {
+        String[] arrayMedical1 = new String[]{"Paracetamol : 1000mg"};
+        String[] arrayMedical2 = new String[]{"Paracetamol : 500mg"};
+        String[] arrayMedical3 = new String[]{"Codéine : 1500mg"};
+        String[] arrayAllergies1 = new String[]{"Aspirine"};
+        String[] arrayAllergies2 = new String[]{"Codéine"};
+        String[] arrayAllergies3 = new String[]{"Paracetamol"};
         String lastname = "Boyd";
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Michel");
-        persons1.setLastname(lastname);
+        persons1.setFirstName("Michel");
+        persons1.setLastName(lastname);
         persons1.setAddress("1509 Culver St");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -514,8 +543,8 @@ public class ModelDTOControllerTest {
         persons1.setEmail("michel@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname(lastname);
+        persons2.setFirstName("Paul");
+        persons2.setLastName(lastname);
         persons2.setAddress("10 rue de la gloire");
         persons2.setCity("Culver");
         persons2.setZip("97465");
@@ -523,8 +552,8 @@ public class ModelDTOControllerTest {
         persons2.setEmail("paul@email.com");
         Persons persons3 = new Persons();
         persons3.setId(3L);
-        persons3.setFirstname("Jacques");
-        persons3.setLastname(lastname);
+        persons3.setFirstName("Jacques");
+        persons3.setLastName(lastname);
         persons3.setAddress("15 rue de Mont Miraille");
         persons3.setCity("Culver");
         persons3.setZip("97451");
@@ -532,29 +561,29 @@ public class ModelDTOControllerTest {
         persons3.setEmail("jacques@email.com");
         MedicalRecords medicalRecords1 = new MedicalRecords();
         medicalRecords1.setId(1L);
-        medicalRecords1.setFirstname("Michel");
-        medicalRecords1.setLastname(lastname);
+        medicalRecords1.setFirstName("Michel");
+        medicalRecords1.setLastName(lastname);
         medicalRecords1.setBirthdate("01/01/1965");
-        medicalRecords1.setMedications("Paracetamol : 1000mg");
-        medicalRecords1.setAllergies("Aspirine");
+        medicalRecords1.setMedications(arrayMedical1);
+        medicalRecords1.setAllergies(arrayAllergies1);
         MedicalRecords medicalRecords2 = new MedicalRecords();
         medicalRecords2.setId(2L);
-        medicalRecords2.setFirstname("Paul");
-        medicalRecords2.setLastname(lastname);
+        medicalRecords2.setFirstName("Paul");
+        medicalRecords2.setLastName(lastname);
         medicalRecords2.setBirthdate("01/01/1985");
-        medicalRecords2.setMedications("Paracetamol : 500mg");
-        medicalRecords2.setAllergies("Codéine");
+        medicalRecords2.setMedications(arrayMedical2);
+        medicalRecords2.setAllergies(arrayAllergies2);
         MedicalRecords medicalRecords3 = new MedicalRecords();
         medicalRecords3.setId(2L);
-        medicalRecords3.setFirstname("Jacques");
-        medicalRecords3.setLastname(lastname);
+        medicalRecords3.setFirstName("Jacques");
+        medicalRecords3.setLastName(lastname);
         medicalRecords3.setBirthdate("01/01/1999");
-        medicalRecords3.setMedications("Codéine : 1500mg");
-        medicalRecords3.setAllergies("Paracetamol");
-        Iterable<Persons> persons = new ArrayList<>(
+        medicalRecords3.setMedications(arrayMedical3);
+        medicalRecords3.setAllergies(arrayAllergies3);
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2, persons3)
         );
-        Iterable<MedicalRecords> medicalRecords = new ArrayList<>(
+        ArrayList<MedicalRecords> medicalRecords = new ArrayList<>(
                 Arrays.asList(medicalRecords1, medicalRecords2, medicalRecords3)
         );
         when(service.getPersons()).thenReturn(persons);
