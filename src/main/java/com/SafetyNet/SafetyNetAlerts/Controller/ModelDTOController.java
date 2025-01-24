@@ -4,7 +4,6 @@ import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
 import com.SafetyNet.SafetyNetAlerts.Model.MedicalRecords;
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
 import com.SafetyNet.SafetyNetAlerts.ModelDTO.*;
-import com.SafetyNet.SafetyNetAlerts.Service.BusinessService;
 import com.SafetyNet.SafetyNetAlerts.Service.FirestationsService;
 import com.SafetyNet.SafetyNetAlerts.Service.MedicalRecordsService;
 import com.SafetyNet.SafetyNetAlerts.Service.PersonService;
@@ -44,7 +43,7 @@ public class ModelDTOController {
     @GetMapping("/communityEmail")
     @ResponseBody
     public ResponseEntity<ArrayList<EmailDTO>> getAllMail(@RequestParam(defaultValue = "city") String city) {
-        Iterable<Persons> persons = personService.getPersons();
+        ArrayList<Persons> persons = personService.getPersons();
         ArrayList<EmailDTO> mail = new ArrayList<>();
         try {
             logger.info("Requête getAllMail avec en paramètre: {}", city);
@@ -75,8 +74,8 @@ public class ModelDTOController {
     @GetMapping("/childAlert")
     @ResponseBody
     public ResponseEntity<ArrayList<ChildAlertDTO>> getChildAlert(@RequestParam(defaultValue = "address") String address) throws ParseException {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         ArrayList<ChildAlertDTO> childAlertDTOS = new ArrayList<>();
         ArrayList<OtherPeopleDTO> arrayList = new ArrayList<>();
         try {
@@ -122,8 +121,8 @@ public class ModelDTOController {
     @GetMapping("/phoneAlert")
     @ResponseBody
     public ResponseEntity<ArrayList<PhoneDTO>> getPhoneAlerts(@RequestParam(defaultValue = "firestation") String firestation) {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<Firestations> firestations = firestationsService.getFirestations();
         ArrayList<PhoneDTO> phoneDTOS = new ArrayList<>();
         try {
             logger.info("Requête getPhoneAlerts avec en paramètre: {}", firestation);
@@ -156,9 +155,9 @@ public class ModelDTOController {
     @GetMapping("/fire")
     @ResponseBody
     public ResponseEntity<ArrayList<FireAddressDTO>> getAddress(@RequestParam(defaultValue = "address") String address) throws ParseException {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<Firestations> firestations = firestationsService.getFirestations();
         ArrayList<FireAddressDTO> fireAddressDTOS = new ArrayList<>();
         try {
             logger.info("Requête getAddress avec en paramètre: {}", address);
@@ -203,9 +202,9 @@ public class ModelDTOController {
     @GetMapping("/firestations")
     @ResponseBody
     public ResponseEntity<ArrayList<PersonsZoneFirestationsDTO>> getPersonsByZone(@RequestParam(defaultValue = "stationNumber") String stationNumber) throws ParseException {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<Firestations> firestations = firestationsService.getFirestations();
         ArrayList<PersonsZoneFirestationsDTO> personsZoneFirestationsDTOS = new ArrayList<>();
         PersonsZoneFirestationsDTO personsZoneFirestationsDTO = new PersonsZoneFirestationsDTO();
         ArrayList<InfoPersonsZoneDTO> infoPersonsZoneDTOS = new ArrayList<>();
@@ -262,9 +261,9 @@ public class ModelDTOController {
     @GetMapping("/flood/stations")
     @ResponseBody
     public ResponseEntity<ArrayList<ListStationDTO>> getHomeByStation(@RequestParam(defaultValue = "stations") String stations) throws ParseException {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
-        Iterable<Firestations> firestations = firestationsService.getFirestations();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<Firestations> firestations = firestationsService.getFirestations();
         ArrayList<ListStationDTO> listStationDTOS = new ArrayList<>();
         try {
             logger.info("Requête getHomeByStation avec en paramètre: {}", stations);
@@ -309,8 +308,8 @@ public class ModelDTOController {
     @GetMapping("/personInfolastName={lastName}")
     @ResponseBody
     public ResponseEntity<ArrayList<InfolastNameDTO>> getPersonsByLastname(@PathVariable("lastName") String lastname) throws ParseException {
-        Iterable<Persons> persons = personService.getPersons();
-        Iterable<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
+        ArrayList<Persons> persons = personService.getPersons();
+        ArrayList<MedicalRecords> medicalRecords = medicalRecordsService.getMedicalRecords();
         ArrayList<InfolastNameDTO> infoPerson = new ArrayList<>();
         try {
             logger.info("Requête getPersonsByLastname avec en paramètre: {}", lastname);
