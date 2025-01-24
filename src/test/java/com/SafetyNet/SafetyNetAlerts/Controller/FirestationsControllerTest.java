@@ -1,10 +1,8 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Firestations;
@@ -22,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 
 @WebMvcTest
@@ -30,9 +27,6 @@ public class FirestationsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private BusinessService businessService;
 
     @MockBean
     private MedicalRecordsService medicalRecordsService;
@@ -53,7 +47,7 @@ public class FirestationsControllerTest {
         firestations2.setId(2L);
         firestations2.setStation("1");
         firestations2.setAddress("1504 Wall Street");
-        Iterable<Firestations> firestations = new ArrayList<>(
+        ArrayList<Firestations> firestations = new ArrayList<>(
                 Arrays.asList(firestations1, firestations2)
         );
         when(service.getFirestations()).thenReturn(firestations);
@@ -69,7 +63,7 @@ public class FirestationsControllerTest {
         firestations.setId(id);
         firestations.setStation("2");
         firestations.setAddress("1504 Wall Street");
-        when(service.getFirestation(id)).thenReturn(Optional.of(firestations));
+        when(service.getFirestation(id)).thenReturn(firestations);
         mockMvc.perform(get("/firestation/{id}", id))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -77,8 +71,7 @@ public class FirestationsControllerTest {
 
     @Test
     public void testGetOneFirestationsNotFound() throws Exception {
-        Long id = 1L;
-        when(service.getFirestation(id)).thenReturn(Optional.empty());
+        Long id = null;
         mockMvc.perform(get("/firestation/{id}", id))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -109,8 +102,7 @@ public class FirestationsControllerTest {
         firestationsUpdated.setId(id);
         firestationsUpdated.setAddress("12 rue de l'aéroport");
         firestationsUpdated.setStation("2");
-        when(service.getFirestation(id)).thenReturn(Optional.of(firestationsInitial));
-        when(service.saveFirestation(any(Firestations.class))).thenReturn(firestationsUpdated);
+        when(service.getFirestation(id)).thenReturn(firestationsInitial);
         mockMvc.perform(put("/firestation/{id}", id)
                         .content(asJsonString(firestationsUpdated))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +114,8 @@ public class FirestationsControllerTest {
     @Test
     public void testPutOneFirestationsBadRequest() throws Exception {
         Long id = 25L;
-        when(service.getFirestation(id)).thenReturn(Optional.empty());
+        Firestations firestations = new Firestations();
+        when(service.getFirestation(id)).thenReturn(firestations);
         mockMvc.perform(put("/firestation/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
