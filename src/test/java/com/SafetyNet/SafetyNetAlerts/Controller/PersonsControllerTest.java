@@ -1,10 +1,8 @@
 package com.SafetyNet.SafetyNetAlerts.Controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.SafetyNet.SafetyNetAlerts.Model.Persons;
@@ -17,14 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 
 @WebMvcTest
@@ -32,9 +27,6 @@ public class PersonsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private BusinessService businessService;
 
     @MockBean
     private MedicalRecordsService medicalRecordsService;
@@ -49,8 +41,8 @@ public class PersonsControllerTest {
     public void testGetPersons() throws Exception {
         Persons persons1 = new Persons();
         persons1.setId(1L);
-        persons1.setFirstname("Paul");
-        persons1.setLastname("Boyd");
+        persons1.setFirstName("Paul");
+        persons1.setLastName("Boyd");
         persons1.setAddress("1509 Culver St");
         persons1.setCity("Culver");
         persons1.setZip("97451");
@@ -58,14 +50,14 @@ public class PersonsControllerTest {
         persons1.setEmail("jaboy@email.com");
         Persons persons2 = new Persons();
         persons2.setId(2L);
-        persons2.setFirstname("Paul");
-        persons2.setLastname("Boyd");
+        persons2.setFirstName("Paul");
+        persons2.setLastName("Boyd");
         persons2.setAddress("1509 Culver St");
         persons2.setCity("Culver");
         persons2.setZip("97451");
         persons2.setPhone("841-874-6512");
         persons2.setEmail("jaboy@email.com");
-        Iterable<Persons> persons = new ArrayList<>(
+        ArrayList<Persons> persons = new ArrayList<>(
                 Arrays.asList(persons1, persons2)
         );
         when(service.getPersons()).thenReturn(persons);
@@ -79,14 +71,14 @@ public class PersonsControllerTest {
         Long id = 1L;
         Persons persons = new Persons();
         persons.setId(id);
-        persons.setFirstname("Paul");
-        persons.setLastname("Boyd");
+        persons.setFirstName("Paul");
+        persons.setLastName("Boyd");
         persons.setAddress("1509 Culver St");
         persons.setCity("Culver");
         persons.setZip("97451");
         persons.setPhone("841-874-6512");
         persons.setEmail("jaboy@email.com");
-        when(service.getPerson(id)).thenReturn(Optional.of(persons));
+        when(service.getPerson(id)).thenReturn(persons);
         mockMvc.perform(get("/person/{id}", id))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -94,8 +86,7 @@ public class PersonsControllerTest {
 
     @Test
     public void testGetOnePersonNotFound() throws Exception {
-        Long id = 1L;
-        when(service.getPerson(id)).thenReturn(Optional.empty());
+        Long id = null;
         mockMvc.perform(get("/person/{id}", id))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -105,8 +96,8 @@ public class PersonsControllerTest {
     public void testAddOnePerson() throws Exception {
         Persons persons = new Persons();
         persons.setId(null);
-        persons.setFirstname("Paul");
-        persons.setLastname("Boyd");
+        persons.setFirstName("Paul");
+        persons.setLastName("Boyd");
         persons.setAddress("1509 Culver St");
         persons.setCity("Culver");
         persons.setZip("97451");
@@ -125,8 +116,8 @@ public class PersonsControllerTest {
         Long id = 1L;
         Persons personsInitial = new Persons();
         personsInitial.setId(id);
-        personsInitial.setFirstname("Paul");
-        personsInitial.setLastname("Boyd");
+        personsInitial.setFirstName("Paul");
+        personsInitial.setLastName("Boyd");
         personsInitial.setAddress("1509 Culver St");
         personsInitial.setCity("Culver");
         personsInitial.setZip("97451");
@@ -134,15 +125,14 @@ public class PersonsControllerTest {
         personsInitial.setEmail("jaboy@email.com");
         Persons personsUpdated = new Persons();
         personsUpdated.setId(id);
-        personsUpdated.setFirstname(personsInitial.getFirstname());
-        personsUpdated.setLastname(personsInitial.getLastname());
+        personsUpdated.setFirstName(personsInitial.getFirstName());
+        personsUpdated.setLastName(personsInitial.getLastName());
         personsUpdated.setAddress("1510 Culver St");
         personsUpdated.setCity("Culver");
         personsUpdated.setZip("97451");
         personsUpdated.setPhone("841-874-6512");
         personsUpdated.setEmail("jaboy@email.com");
-        when(service.getPerson(id)).thenReturn(Optional.of(personsInitial));
-        when(service.savePerson(any(Persons.class))).thenReturn(personsUpdated);
+        when(service.getPerson(id)).thenReturn(personsInitial);
         mockMvc.perform(put("/person/{id}", id)
                         .content(asJsonString(personsUpdated))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -154,7 +144,8 @@ public class PersonsControllerTest {
     @Test
     public void testPutOnePersonBadRequest() throws Exception {
         Long id = 25L;
-        when(service.getPerson(id)).thenReturn(Optional.empty());
+        Persons persons = new Persons();
+        when(service.getPerson(id)).thenReturn(persons);
         mockMvc.perform(put("/person/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
