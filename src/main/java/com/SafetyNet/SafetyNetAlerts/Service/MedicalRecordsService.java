@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 public class MedicalRecordsService {
@@ -46,8 +45,6 @@ public class MedicalRecordsService {
     }
 
     /**
-     *
-     * @param id
      * @param medicalRecord
      * @return currentMedicalRecords
      */
