@@ -1,7 +1,6 @@
 package com.SafetyNet.SafetyNetAlerts.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
 public class Firestations {
