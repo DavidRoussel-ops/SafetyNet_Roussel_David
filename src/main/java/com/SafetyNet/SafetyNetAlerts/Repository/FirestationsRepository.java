@@ -15,6 +15,9 @@ import java.util.Objects;
 @Repository
 public interface FirestationsRepository extends CrudRepository<Firestations, Long> {
 
+    /**
+     * @return firestationsArrayList
+     */
     default ArrayList<Firestations> findAllFirestations() {
         try {
             Long id = 1L;
@@ -37,6 +40,10 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         }
     }
 
+    /**
+     * @param firestations
+     * @throws IOException
+     */
     default void updateFirestation(Firestations firestations) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -53,6 +60,10 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         }
     }
 
+    /**
+     * @param id
+     * @throws IOException
+     */
     default void deleteFirestation(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -64,6 +75,10 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param firestations
+     * @throws IOException
+     */
     default void saveFirestation(Firestations firestations) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -82,6 +97,10 @@ public interface FirestationsRepository extends CrudRepository<Firestations, Lon
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param id
+     * @return firestation
+     */
     default Firestations findFirestationById(final Long id) {
         ArrayList<Firestations> firestations = findAllFirestations();
         for (Firestations firestation : firestations) {
