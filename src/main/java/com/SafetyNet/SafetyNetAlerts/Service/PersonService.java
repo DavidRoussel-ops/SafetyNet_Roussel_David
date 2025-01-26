@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 
 @Service
@@ -47,48 +46,10 @@ public class PersonService {
     }
 
     /**
-     *
-     * @param id
      * @param persons
      * @return currentPersons
      */
     public void putPerson(final Persons persons) throws IOException {
         personsRepository.updatePerson(persons);
-        /*Optional<Persons> personsOptional = getPerson(id);
-        if (personsOptional.isPresent()) {
-            Persons currentPersons = personsOptional.get();
-
-            String firstName = persons.getFirstname();
-            if (firstName != null) {
-                currentPersons.setFirstname(firstName);
-            }
-            String lastName = persons.getLastname();
-            if (lastName != null) {
-                currentPersons.setLastname(lastName);
-            }
-            String address = persons.getAddress();
-            if (address != null) {
-                currentPersons.setAddress(address);
-            }
-            String city = persons.getCity();
-            if (city != null) {
-                currentPersons.setCity(city);
-            }
-            String zip = persons.getZip();
-            if (zip != null) {
-                currentPersons.setZip(zip);
-            }
-            String phone = persons.getPhone();
-            if (phone != null) {
-                currentPersons.setPhone(phone);
-            }
-            String email = persons.getEmail();
-            if (email != null) {
-                currentPersons.setEmail(email);
-            }
-            return savePerson(currentPersons);
-        } else {
-            return null;
-        }*/
     }
 }
