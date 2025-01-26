@@ -1,10 +1,7 @@
 package com.SafetyNet.SafetyNetAlerts.ModelDTO;
 
-import lombok.Data;
-
 import java.util.ArrayList;
 
-@Data
 public class PersonsZoneFirestationsDTO {
 
     private ArrayList<InfoPersonsZoneDTO> infoPersonsZoneDTOS;
@@ -13,4 +10,27 @@ public class PersonsZoneFirestationsDTO {
 
     private int child;
 
+    public ArrayList<InfoPersonsZoneDTO> getInfoPersonsZoneDTOS() {
+        return infoPersonsZoneDTOS;
+    }
+
+    public void setInfoPersonsZoneDTOS(ArrayList<InfoPersonsZoneDTO> infoPersonsZoneDTOS) {
+        this.infoPersonsZoneDTOS = infoPersonsZoneDTOS;
+    }
+
+    public int getAdult() {
+        return adult;
+    }
+
+    public void setAdult(int adult) {
+        this.adult = adult;
+    }
+
+    public int getChild() {
+        return child;
+    }
+
+    public void setChild(int child) {
+        this.child = child;
+    }
 }
