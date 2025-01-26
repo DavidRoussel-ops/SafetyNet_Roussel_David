@@ -15,6 +15,9 @@ import java.util.*;
 @Repository
 public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords, Long> {
 
+    /**
+     * @return medicalRecordsArrayList
+     */
     default ArrayList<MedicalRecords> findAllMedicalRecords() {
         try {
             Long id = 1L;
@@ -43,6 +46,10 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         }
     }
 
+    /**
+     * @param medicalRecords
+     * @throws IOException
+     */
     default void updateMedicalRecord(MedicalRecords medicalRecords) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -62,6 +69,10 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         }
     }
 
+    /**
+     * @param id
+     * @throws IOException
+     */
     default void deleteMedicalRecord(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -73,6 +84,10 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param medicalRecords
+     * @throws IOException
+     */
     default void saveMedicalRecord(MedicalRecords medicalRecords) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -94,6 +109,10 @@ public interface MedicalRecordsRepository extends CrudRepository<MedicalRecords,
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param id
+     * @return medicalRecords1
+     */
     default MedicalRecords findMedicalRecordById(final Long id) {
         ArrayList<MedicalRecords> medicalRecords = findAllMedicalRecords();
         for (MedicalRecords medicalRecords1 : medicalRecords) {
