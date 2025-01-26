@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class FirestationsService {
@@ -47,30 +45,10 @@ public class FirestationsService {
     }
 
     /**
-     *
-     * @param id
      * @param firestations
      * @return currentFirestation
      */
     public void putFirestation(final Firestations firestations) throws IOException {
         firestationsRepository.updateFirestation(firestations);
-        /*Firestations firestationsOptional = getFirestation(id);
-        if (Objects.equals(id, firestationsOptional.getId())) {
-            Firestations currentFirestation = firestationsOptional;
-
-            String address = firestations.getAddress();
-            if (address != null) {
-                currentFirestation.setAddress(address);
-            }
-
-            String station = firestations.getStation();
-            if (station != null) {
-                currentFirestation.setStation(station);
-            }
-            saveFirestation(currentFirestation);
-            return currentFirestation;
-        } else {
-            return null;
-        }*/
     }
 }
