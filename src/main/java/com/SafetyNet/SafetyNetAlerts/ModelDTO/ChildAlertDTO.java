@@ -1,10 +1,7 @@
 package com.SafetyNet.SafetyNetAlerts.ModelDTO;
 
-import lombok.Data;
-
 import java.util.ArrayList;
 
-@Data
 public class ChildAlertDTO {
 
     private String firstname;
@@ -14,4 +11,36 @@ public class ChildAlertDTO {
     private int age;
 
     private ArrayList<OtherPeopleDTO> othePeople;
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public ArrayList<OtherPeopleDTO> getOthePeople() {
+        return othePeople;
+    }
+
+    public void setOthePeople(ArrayList<OtherPeopleDTO> othePeople) {
+        this.othePeople = othePeople;
+    }
 }
