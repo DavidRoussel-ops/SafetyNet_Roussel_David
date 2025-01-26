@@ -15,6 +15,9 @@ import java.util.Objects;
 @Repository
 public interface PersonsRepository extends CrudRepository<Persons, Long> {
 
+    /**
+     * @return personsArrayList
+     */
     default ArrayList<Persons> findAllPersons() {
         try {
             Long id = 1L;
@@ -42,6 +45,10 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         }
     }
 
+    /**
+     * @param persons
+     * @throws IOException
+     */
     default void updatePerson(Persons persons) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -63,6 +70,10 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         }
     }
 
+    /**
+     * @param id
+     * @throws IOException
+     */
     default void deletePerson(Long id) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -74,6 +85,10 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param persons
+     * @throws IOException
+     */
     default void savePerson(Persons persons) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("src/main/resources/data.json");
@@ -97,6 +112,10 @@ public interface PersonsRepository extends CrudRepository<Persons, Long> {
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, addNode);
     }
 
+    /**
+     * @param id
+     * @return persons1
+     */
     default Persons findPersonById(final Long id) {
         ArrayList<Persons> persons = findAllPersons();
         for (Persons persons1 : persons) {
