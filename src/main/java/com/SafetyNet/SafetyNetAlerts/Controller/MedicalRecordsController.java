@@ -53,7 +53,11 @@ public class MedicalRecordsController {
         logger.debug("medicalRecordsService.getMedicalRecord() en cours : {}", medicalRecords);
         try {
             logger.info("Réponse réussi pour la requête getMedicalRecord : {}", medicalRecords);
-            return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
+            if (medicalRecords != null) {
+                return new ResponseEntity<>(medicalRecords, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête getMedicalRecord : {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
