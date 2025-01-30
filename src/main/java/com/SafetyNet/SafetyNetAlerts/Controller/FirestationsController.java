@@ -50,7 +50,11 @@ public class FirestationsController {
         Firestations firestation = firestationsService.getFirestation(id);
         logger.debug("firestationsService.getFirestation() en cours : {}", firestation);
         try {
-            return new ResponseEntity<>(firestation, HttpStatus.OK);
+            if (firestation != null) {
+                return new ResponseEntity<>(firestation, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête getFirestation: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
