@@ -68,6 +68,14 @@ public class FirestationsControllerTest {
     }
 
     @Test
+    public void testGetOneFirestationsBadRequest() throws Exception {
+        Long id = 50L;
+        mockMvc.perform(get("/firestation/{id}", id))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
     public void testGetOneFirestationsNotFound() throws Exception {
         Long id = null;
         mockMvc.perform(get("/firestation/{id}", id))
