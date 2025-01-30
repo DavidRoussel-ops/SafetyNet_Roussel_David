@@ -83,6 +83,14 @@ public class PersonsControllerTest {
     }
 
     @Test
+    public void testGetOnePersonBadRequest() throws Exception {
+        Long id = 55L;
+        mockMvc.perform(get("/person/{id}", id))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
     public void testGetOnePersonNotFound() throws Exception {
         Long id = null;
         mockMvc.perform(get("/person/{id}", id))
