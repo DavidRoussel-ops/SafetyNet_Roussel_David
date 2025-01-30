@@ -87,6 +87,14 @@ public class MedicalRecordsControllerTest {
     }
 
     @Test
+    public void testGetOneMedicalRecordsBadRequest() throws Exception {
+        Long id = 52L;
+        mockMvc.perform(get("/medicalRecord/{id}", id))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
     public void testGetOneMedicalRecordsNotFound() throws Exception {
         Long id = null;
         mockMvc.perform(get("/medicalRecord/{id}", id))
