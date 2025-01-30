@@ -52,7 +52,11 @@ public class PersonsController {
         Persons persons = personService.getPerson(id);
         logger.debug("personService.getPerson() en cours : {}", persons);
         try {
-            return new ResponseEntity<>(persons, HttpStatus.OK);
+            if (persons != null) {
+                return new ResponseEntity<>(persons, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             logger.error("Erreur lors du traitement de la requête getPerson: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
